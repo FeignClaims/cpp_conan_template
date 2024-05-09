@@ -33,10 +33,18 @@ add_test_config(common
   --reporter xml
 )
 
+# Add src
+add_subdirectory(my_app)
+add_subdirectory(my_header_only_lib)
+add_subdirectory(my_lib)
+
 # Package the project
 # for products, using `package_project(TARGETS app)` to pack the executable should be enough
 package_project(
   TARGETS
+  my_app
+  my_lib
+  my_header_only_lib
   starter_project_options
   starter_project_warnings
 )
