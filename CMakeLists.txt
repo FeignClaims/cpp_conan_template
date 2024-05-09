@@ -11,6 +11,10 @@ include(enable_customized_project_options)
 # Options
 option(BUILD_STARTER_TESTING "Build the testing tree." ON)
 
+# workaround: RPATH stuff
+# !!!NOT RECOMMENDED!!! see https://github.com/ossf/wg-best-practices-os-developers/blob/main/docs/Compiler-Hardening-Guides/Compiler-Options-Hardening-Guide-for-C-and-C%2B%2B.md
+include(rpath)
+
 # Include CTest before any tests
 include(CTest)
 
