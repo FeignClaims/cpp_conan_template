@@ -1,0 +1,193 @@
+name: ci
+on:
+  pull_request:
+  release:
+    types: [published]
+  push:
+    tags: "*"
+    branches:
+      - main
+      - develop
+  workflow_dispatch:
+
+jobs:
+  Test:
+    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
+    runs-on: ${{ matrix.os }}
+    permissions:
+      actions: read
+      contents: write
+      security-events: write
+    strategy:
+      fail-fast: false
+
+      # Recommendations:
+      #   * support at least 2 operating systems
+      #   * support at least 2 compilers
+      #   * make sure all supported configurations for your project are built
+      #
+      # Disable/enable builds in this list to meet the above recommendations
+      # and your own projects needs
+      matrix:
+        os:
+          - ubuntu-22.04
+          - macos-12
+          - windows-2022
+        compiler:
+          # you can specify the version after `-` like "llvm-13.0.0".
+          - llvm
+          - gcc-13
+          - msvc
+        build_type:
+          - Debug
+          - Release
+        developer_mode:
+          - ON
+          - OFF
+
+        # To exclude a specific job from the matrix (e.g gcc on Windows), you can use this syntax.
+        exclude:
+          - os: ubuntu-22.04
+            compiler: msvc
+          - os: macos-12
+            compiler: msvc
+
+          # FIXME: Solve annotated_string mismatch in Windows to enable developer mode totally
+          - os: windows-2022
+            compiler: msvc
+            developer_mode: ON
+          - os: windows-2022
+            compiler: gcc-13
+            developer_mode: ON
+
+        include:
+          # Inject gcov_executable variable
+          - compiler: llvm
+            gcov_executable: "llvm-cov gcov"
+          - compiler: gcc-13
+            gcov_executable: gcov-13
+
+          # Inject actual compiler name
+          - compiler: llvm
+            compiler_name: clang
+          - compiler: gcc-13
+            compiler_name: gcc
+          - compiler: msvc
+            compiler_name: msvc
+
+          # Enable package for release build
+          - build_type: Release
+            developer_mode: OFF
+            package_generator: ZIP
+
+    steps:
+      - name: Linux - Maximize build disk space
+        uses: easimon/maximize-build-space@v8
+        if: runner.os == 'Linux'
+        with:
+          root-reserve-mb: 30720
+          swap-size-mb: 1024
+          remove-android: "true"
+          remove-docker-images: "true"
+          remove-dotnet: "true"
+
+      - uses: actions/checkout@v4
+
+      - name: Setup Cpp
+        uses: aminya/setup-cpp@v1
+        with:
+          compiler: ${{ matrix.compiler }}
+          vcvarsall: ${{ contains(matrix.os, 'windows')}}
+
+          cmake: true
+          ninja: true
+          ccache: true
+          python: true
+
+          cppcheck: true
+          clangtidy: true
+
+          gcovr: 7.2
+          opencppcoverage: true
+
+      - name: Install and config conan
+        run: |
+          pip3 install conan
+          conan config install ./conan
+
+      - name: Retrieve conan args
+        id: conan
+        shell: bash
+        run: |
+          echo "home=$(conan config home)" >> "$GITHUB_OUTPUT"
+          echo "args=-pr:h '${{ matrix.os }}-${{ matrix.compiler_name }}-x86_64' -pr:b '${{ matrix.os }}-${{ matrix.compiler_name }}-x86_64' -s 'build_type=${{ matrix.build_type }}' -b missing" >> "$GITHUB_OUTPUT"
+
+      - name: Cache conan
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.conan.outputs.home }}
+          key: conan-cache-${{ runner.os }}-${{ hashFiles('conanfile.py') }}
+          restore-keys: |
+            conan-cache-${{ runner.os }}-
+
+      - name: Cleanup conan system packages (they are not properly cached)
+        run: |
+          conan remove '*/system' -c
+
+      - name: Install conan packages
+        run: |
+          conan install . ${{ steps.conan.outputs.args }}
+
+      - name: Clean 30 days unused conan caches
+        run: |
+          conan remove '*' --lru=30d
+
+      - name: Save conan cache even when failed afterwards
+        uses: actions/cache/save@v3
+        with:
+          path: ${{ steps.conan.outputs.home }}
+          key: conan-cache-${{ runner.os }}-${{ hashFiles('conanfile.py') }}
+
+      - name: Configure cmake
+        run: |
+          cmake --preset ${{ matrix.compiler_name }} ${{ matrix.compiler_name == 'msvc' && '-A x64 -T v143' || '' }} -D ENABLE_DEVELOPER_MODE:BOOL=${{ matrix.developer_mode }} -D OPT_ENABLE_COVERAGE:BOOL=${{ matrix.build_type == 'Debug' }}
+
+      - name: Build and test
+        run: |
+          conan build . ${{ steps.conan.outputs.args }}
+
+      - name: Unix - Coverage
+        if: runner.os != 'Windows' && matrix.build_type == 'Debug'
+        working-directory: build/${{ matrix.compiler_name }}
+        run: |
+          ctest -C ${{ matrix.build_type }}
+          gcovr -j ${{ env.nproc }} --delete --root ../../ --print-summary --xml-pretty --xml coverage.xml . --gcov-executable '${{ matrix.gcov_executable }}'
+
+      - name: Windows - Coverage
+        if: runner.os == 'Windows' && matrix.build_type == 'Debug'
+        working-directory: build/${{ matrix.compiler_name }}
+        run: |
+          OpenCppCoverage.exe --export_type cobertura:coverage.xml --cover_children -- ctest -C ${{matrix.build_type}}
+
+      - name: Publish to codecov
+        if: matrix.build_type == 'Debug'
+        uses: codecov/codecov-action@v3
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        with:
+          flags: ${{ runner.os }}
+          name: ${{ runner.os }}-coverage
+          files: ./build/${{ matrix.compiler_name }}/coverage.xml
+
+      - name: CPack
+        if: matrix.package_generator != ''
+        working-directory: build/${{ matrix.compiler_name }}
+        run: |
+          cpack -C ${{ matrix.build_type }} -G ${{ matrix.package_generator }} -B _package -V
+
+      - name: Publish tagged
+        uses: softprops/action-gh-release@v1
+        if: ${{ startsWith(github.ref, 'refs/tags/') && matrix.package_generator != '' }}
+        with:
+          files: |
+            build/${{ matrix.compiler_name }}/_package/*.*
