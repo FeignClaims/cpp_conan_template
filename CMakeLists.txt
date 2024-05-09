@@ -8,6 +8,31 @@ project(starter VERSION 0.0.1 LANGUAGES CXX)
 # Customize project_options
 include(enable_customized_project_options)
 
+# Options
+option(BUILD_STARTER_TESTING "Build the testing tree." ON)
+
+# Include CTest before any tests
+include(CTest)
+
+# Add handy test wrappers
+include(add_test)
+
+# Common test config
+add_test_config(common
+  DEPENDENCIES_CONFIG
+  Catch2
+
+  LIBRARIES
+  starter_project_options
+  starter_project_warnings
+
+  SYSTEM_LIBRARIES
+  Catch2::Catch2WithMain
+
+  EXECUTE_ARGS
+  --reporter xml
+)
+
 # Package the project
 # for products, using `package_project(TARGETS app)` to pack the executable should be enough
 package_project(
