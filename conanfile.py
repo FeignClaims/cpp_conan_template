@@ -98,6 +98,7 @@ class StarterRecipe(ConanFile):
     def generate(self):
         CMakeDeps(self).generate()
         toolchain = CMakeToolchain(self)
+        toolchain.cache_variables["starter_BUILD_TESTING"] = not self.conf.get("tools.build:skip_test", default=False)
         toolchain.presets_prefix = ""
         toolchain.generate()
 

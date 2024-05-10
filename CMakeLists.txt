@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.25)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 include(fetch_project_options)
+include(${CMAKE_CURRENT_SOURCE_DIR}/options.cmake)
 
 project(starter VERSION 0.0.1 LANGUAGES CXX)
 
@@ -12,10 +13,10 @@ include(enable_customized_project_options)
 # !!!NOT RECOMMENDED!!! see https://github.com/ossf/wg-best-practices-os-developers/blob/main/docs/Compiler-Hardening-Guides/Compiler-Options-Hardening-Guide-for-C-and-C%2B%2B.md
 include(rpath)
 
-# Include CTest before any tests
-include(CTest)
+if(starter_BUILD_TESTING)
+  # Include CTest before any tests
+  include(CTest)
 
-if(BUILD_TESTING)
   # Add handy test wrappers
   include(add_test)
 

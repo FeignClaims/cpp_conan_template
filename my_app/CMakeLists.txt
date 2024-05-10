@@ -42,6 +42,6 @@ target_link_libraries(my_app
 )
 
 # Tests
-if(BUILD_TESTING)
+if(starter_BUILD_TESTING)
   add_subdirectory(test)
 endif()
