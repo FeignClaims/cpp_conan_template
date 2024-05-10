@@ -99,6 +99,7 @@ class StarterRecipe(ConanFile):
         CMakeDeps(self).generate()
         toolchain = CMakeToolchain(self)
         toolchain.cache_variables["starter_BUILD_TESTING"] = not self.conf.get("tools.build:skip_test", default=False)
+        toolchain.cache_variables["starter_BUILD_FUZZ_TESTING"] = False
         toolchain.presets_prefix = ""
         toolchain.generate()
 

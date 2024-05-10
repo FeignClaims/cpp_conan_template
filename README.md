@@ -5,7 +5,7 @@
 
 > Write your own conan profile and conanfile, then cmake using the generated toochians.
 
-:warning: support for docker images and fuzz testing dose NOT complete yet!
+:warning: support for docker images dose NOT complete yet!
 
 ## About cmake_starter_template
 

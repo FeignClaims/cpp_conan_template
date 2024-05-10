@@ -13,28 +13,45 @@ include(enable_customized_project_options)
 # !!!NOT RECOMMENDED!!! see https://github.com/ossf/wg-best-practices-os-developers/blob/main/docs/Compiler-Hardening-Guides/Compiler-Options-Hardening-Guide-for-C-and-C%2B%2B.md
 include(rpath)
 
-if(starter_BUILD_TESTING)
+if(starter_BUILD_TESTING OR starter_BUILD_FUZZ_TESTING)
   # Include CTest before any tests
   include(CTest)
 
   # Add handy test wrappers
   include(add_test)
 
-  # Common test config
-  add_test_config(common
-    DEPENDENCIES_CONFIG
-    Catch2
+  if(starter_BUILD_TESTING)
+    # Common test config
+    add_test_config(common
+      DEPENDENCIES_CONFIG
+      Catch2
 
-    LIBRARIES
-    starter_project_options
-    starter_project_warnings
+      LIBRARIES
+      starter_project_options
+      starter_project_warnings
 
-    SYSTEM_LIBRARIES
-    Catch2::Catch2WithMain
+      SYSTEM_LIBRARIES
+      Catch2::Catch2WithMain
 
-    EXECUTE_ARGS
-    --reporter xml
-  )
+      EXECUTE_ARGS
+      --reporter xml
+    )
+  endif()
+
+  if(starter_BUILD_FUZZ_TESTING)
+    add_library(starter_project_libfuzzer INTERFACE)
+    target_link_libraries(starter_project_libfuzzer
+      INTERFACE
+      -coverage
+      -fsanitize=fuzzer,undefined,address
+    )
+    target_compile_options(starter_project_libfuzzer
+      INTERFACE
+      -fsanitize=fuzzer,undefined,address
+    )
+
+    add_subdirectory(fuzz_test)
+  endif()
 endif()
 
 # Add src

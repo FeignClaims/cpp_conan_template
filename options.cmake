@@ -8,3 +8,4 @@ endif()
 include(CMakeDependentOption)
 
 cmake_dependent_option(starter_BUILD_TESTING "Building the test tree." ON "${is_standalone}" OFF)
+option(starter_BUILD_FUZZ_TESTING "Building the fuzz test tree." OFF)
