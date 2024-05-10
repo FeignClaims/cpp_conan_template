@@ -1,0 +1,79 @@
+name: "setup_conan"
+description: "sets up conan"
+inputs:
+  profile:
+    required: true
+    description: "The conan profile to be used"
+  config_folder:
+    required: true
+    description: "The conan config folder to be installed by `conan config install <config_folder>`"
+  args:
+    description: "Additional conan args"
+    default: ""
+  recipe_repository:
+    description: "The conan recipe repository to be checked out and added as a conan remote"
+    default: ""
+outputs:
+  home:
+    description: "The conan home path"
+    value: ${{ steps.output.outputs.home }}
+  profile:
+    description: "The conan profile to be used"
+    value: ${{ inputs.profile }}
+  args:
+    description: "The corresponding args that should be used in conan commands afterwards"
+    value: ${{ steps.output.outputs.args }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Install conan
+      shell: bash
+      run: |
+        pip3 install conan
+
+    - name: Output
+      id: output
+      shell: bash
+      run: |
+        echo "home=$(conan config home)" >> "$GITHUB_OUTPUT"
+        echo "args=-pr:h '${{ inputs.profile }}' -pr:b '${{ inputs.profile }}' ${{ inputs.args }}" >> "$GITHUB_OUTPUT"
+
+    - name: Check the existence of the corresponding profile
+      uses: andstor/file-existence-action@v3.0.0
+      with:
+        files: "${{ inputs.config_folder }}/profiles/${{ inputs.profile }}"
+        fail: true
+
+    - name: Install conan config folder
+      shell: bash
+      run: |
+        conan config install ${{ inputs.config_folder }}
+
+    - name: Checkout the specified recipe repository
+      if: inputs.recipe_repository != ''
+      uses: actions/checkout@v4
+      with:
+        repository: ${{ inputs.recipe_repository }}
+        path: conan_recipes
+
+    - name: Add the specified recipe repository as a remote
+      if: inputs.recipe_repository != ''
+      shell: bash
+      run: |
+        conan remote add local conan_recipes -f
+
+    - name: Cleanup conan system packages (they are not properly cached)
+      shell: bash
+      run: |
+        conan remove '*/system' -c
+
+    - name: Install conan packages
+      shell: bash
+      run: |
+        conan install . ${{ steps.output.outputs.args }} -b missing
+
+    - name: Clean 30 days unused conan caches
+      shell: bash
+      run: |
+        conan remove '*' --lru=30d

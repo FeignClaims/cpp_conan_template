@@ -93,6 +93,13 @@ jobs:
 
       - uses: actions/checkout@v4
 
+      - name: Setup cache
+        uses: ./.github/actions/setup_cache
+        with:
+          compiler: ${{ matrix.compiler }}
+          build_type: ${{ matrix.build_type }}
+          developer_mode: ${{ matrix.developer_mode }}
+
       - name: Setup cpp
         uses: aminya/setup-cpp@v1
         with:
@@ -110,43 +117,13 @@ jobs:
           gcovr: 7.2
           opencppcoverage: true
 
-      - name: Install and config conan
-        run: |
-          pip3 install conan
-          conan config install ./conan
-
-      - name: Retrieve conan args
+      - name: Setup conan
+        uses: ./.github/actions/setup_conan
         id: conan
-        shell: bash
-        run: |
-          echo "home=$(conan config home)" >> "$GITHUB_OUTPUT"
-          echo "args=-pr:h '${{ matrix.os }}-${{ matrix.compiler_name }}-x86_64' -pr:b '${{ matrix.os }}-${{ matrix.compiler_name }}-x86_64' -s 'build_type=${{ matrix.build_type }}' -b missing" >> "$GITHUB_OUTPUT"
-
-      - name: Cache conan
-        uses: actions/cache@v3
         with:
-          path: ${{ steps.conan.outputs.home }}
-          key: conan-cache-${{ runner.os }}-${{ hashFiles('conanfile.py') }}
-          restore-keys: |
-            conan-cache-${{ runner.os }}-
-
-      - name: Cleanup conan system packages (they are not properly cached)
-        run: |
-          conan remove '*/system' -c
-
-      - name: Install conan packages
-        run: |
-          conan install . ${{ steps.conan.outputs.args }}
-
-      - name: Clean 30 days unused conan caches
-        run: |
-          conan remove '*' --lru=30d
-
-      - name: Save conan cache even when failed afterwards
-        uses: actions/cache/save@v3
-        with:
-          path: ${{ steps.conan.outputs.home }}
-          key: conan-cache-${{ runner.os }}-${{ hashFiles('conanfile.py') }}
+          profile: ${{ matrix.os }}-${{ matrix.compiler_name }}-x86_64
+          config_folder: ./conan
+          args: -s 'build_type=${{ matrix.build_type }}'
 
       - name: Configure cmake
         run: |

@@ -1,0 +1,33 @@
+name: "setup_cache"
+description: "sets up the shared cache"
+inputs:
+  compiler:
+    required: true
+    description: "Compiler"
+  build_type:
+    required: true
+    description: "Build type"
+  developer_mode:
+    required: true
+    description: "Developer mode"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Cache software caches
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.cache/pip
+          ~/.ccache
+        key: ${{ runner.os }}-${{ inputs.compiler }}-${{ inputs.build_type }}-${{ inputs.developer_mode }}-${{ hashFiles('**/CMakeLists.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-${{ inputs.compiler }}-${{ inputs.build_type }}
+
+    - name: Cache conan
+      uses: actions/cache@v3
+      with:
+        path: ~/.conan2/p
+        key: ${{ runner.os }}-${{ inputs.compiler }}-${{ inputs.build_type }}-${{ inputs.developer_mode }}-${{ hashFiles('conanfile.py', 'conanfile.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-${{ inputs.compiler }}-${{ inputs.build_type }}
