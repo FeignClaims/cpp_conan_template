@@ -6,22 +6,20 @@
 ├── .vscode
 ├── cmake    # cmake modules
 ├── conan    # conan config files to be installed by `conan config`
-├── doc
 │ # vvv examples vvv
 ├── my_app
 ├── my_header_only_lib
 ├── my_lib
 │ # ^^^ examples ^^^
-├── script
 ├── .clang-format
 ├── .clang-tidy
 ├── .clangd
 ├── .gitattributes
 ├── .gitignore
+├── conanfile.py
 ├── CMakeLists.txt
 ├── LICENSE
-├── README.md
-└── conanfile.py
+└── README.md
 ```
 
 ## Conan config files
