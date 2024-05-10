@@ -1,13 +1,13 @@
-# cmake_starter_template
+# cpp_conan_template
 
-[![ci](https://github.com/FeignClaims/cmake_starter_template/actions/workflows/ci.yml/badge.svg)](https://github.com/FeignClaims/cmake_starter_template/actions/workflows/ci.yml)
-[![codecov](https://codecov.io/gh/FeignClaims/cmake_starter_template/graph/badge.svg?token=BQEOMHO4P6)](https://codecov.io/gh/FeignClaims/cmake_starter_template)
+[![ci](https://github.com/FeignClaims/cpp_conan_template/actions/workflows/ci.yml/badge.svg)](https://github.com/FeignClaims/cpp_conan_template/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/FeignClaims/cpp_conan_template/graph/badge.svg?token=BQEOMHO4P6)](https://codecov.io/gh/FeignClaims/cpp_conan_template)
 
 > Write your own conan profile and conanfile, then cmake using the generated toochians.
 
 :warning: support for docker images dose NOT complete yet!
 
-## About cmake_starter_template
+## About cpp_conan_template
 
 This is a cmake template using conan 2.0 for setting up and running with C++ quickly.
 
@@ -34,7 +34,7 @@ It requires:
 ### Use the Github template
 
 First, click the green `Use this template` button near the top of this page.
-This will take you to Github's ['Generate Repository'](https://github.com/FeignClaims/cmake_starter_template/generate) page.
+This will take you to Github's ['Generate Repository'](https://github.com/FeignClaims/cpp_conan_template/generate) page.
 Fill in a repository name and short description, and click 'Create repository from template'.
 This will allow you to create a new repository in your Github account,
 prepopulated with the contents of this project.

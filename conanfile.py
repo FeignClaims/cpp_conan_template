@@ -11,8 +11,8 @@ class StarterRecipe(ConanFile):
     name = "starter"
     description = "A CMake template using Conan 2"
     license = "Unlicense"
-    url = "https://github.com/FeignClaims/cmake_starter_template"
-    homepage = "https://github.com/FeignClaims/cmake_starter_template"
+    url = "https://github.com/FeignClaims/cpp_conan_template"
+    homepage = "https://github.com/FeignClaims/cpp_conan_template"
     topics = ("template")
     package_type = "library"
     settings = "os", "arch", "compiler", "build_type"
