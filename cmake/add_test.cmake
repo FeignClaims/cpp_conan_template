@@ -1,7 +1,7 @@
 # - Handy functions to create tests
 # This module provides handy add_test wrappers and configs.
 #
-# These conifg functions will generate a test config target that can be used by linking it.
+# The below config function will generate a test config target that can be used by linking it.
 #
 #   add_test_config(<config_name>  # target will be named as `test_config.${config_name}`
 #     [SOURCES <arg1...>]
@@ -17,7 +17,7 @@
 #     [EXECUTE_ARGS <arg1...>]
 #   )
 #
-# These add_test wrappers will generate a test target and register it in CTest.
+# The below add_test wrappers will generate a test target and register it in CTest.
 #
 #   add_library_test(<library> <test_name>
 #     [CONFIGS <arg1...>]  # accepts both `${config_name}` and `test_config.${config_name}`
