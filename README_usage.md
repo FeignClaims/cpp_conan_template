@@ -27,7 +27,7 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 include(fetch_project_options)
 
 run_conan()
-project(starter VERSION 0.0.1 LANGUAGES CXX)
+project(replace_this VERSION 0.0.1 LANGUAGES CXX)
 ```
 
 By adding this line of code, we enable cmake to use conan automatically, all we need to do is to configure cmake as usual. For example:

@@ -1,12 +1,12 @@
-# - Customization point for project_options
-# This module sets all customization on dynamic_project_options
+# - Customization point for project_options: https://github.com/aminya/project_options
+# This module customizes and runs `dynamic_project_options(...)`.
 #
-# Include this module right after `project()` to make use
-#
-# If conan2 or vcpkg is requried, include(fetch_project_options) separately and invoke `run_conan2()` or `run_vcpkg()`
+# Note that this module should be included this module after `project(...)`.
 include_guard()
 
-include(${CMAKE_CURRENT_LIST_DIR}/fetch_project_options.cmake)
+if(NOT _replace_this_project_options_POPULATED)
+  message(FATAL_ERROR "please `include(replace_this_fetch_project_options)`")
+endif()
 
 # compile_commands.json
 set(ENABLE_COMPILE_COMMANDS_SYMLINK_DEFAULT ON)
@@ -16,6 +16,7 @@ set(ENABLE_CONTROL_FLOW_PROTECTION_DEFAULT ON)
 set(ENABLE_ELF_PROTECTION_DEFAULT OFF)
 set(ENABLE_OVERFLOW_PROTECTION_DEFAULT ON)
 set(ENABLE_RUNTIME_SYMBOLS_RESOLUTION_DEFAULT ON)
+
 if(WIN32 AND CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   set(ENABLE_STACK_PROTECTION_DEFAULT OFF)
 else()
@@ -28,7 +29,7 @@ set(ENABLE_NATIVE_OPTIMIZATION_DEFAULT ON)
 
 dynamic_project_options(
   PREFIX
-  "starter" # set a prefix in case this project is used as a subproject
+  "replace_this" # set a prefix in case this project is used as a subproject
 
   MSVC_WARNINGS
   /W4 # Baseline reasonable warnings

@@ -11,8 +11,8 @@ target_sources(my_app_library
 target_include_interface_directories(my_app_library include) # Includes
 target_link_libraries(my_app_library
   PRIVATE
-  starter_project_options
-  starter_project_warnings
+  replace_this_project_options
+  replace_this_project_warnings
 )
 
 target_find_dependencies(my_app_library # Find dependencies
@@ -37,11 +37,11 @@ target_sources(my_app
 target_link_libraries(my_app
   PRIVATE
   my_app_library
-  starter_project_options
-  starter_project_warnings
+  replace_this_project_options
+  replace_this_project_warnings
 )
 
 # Tests
-if(starter_BUILD_TESTING)
+if(replace_this_BUILD_TESTING)
   add_subdirectory(test)
 endif()

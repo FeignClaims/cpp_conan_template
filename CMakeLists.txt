@@ -1,34 +1,36 @@
 cmake_minimum_required(VERSION 3.25)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
-include(fetch_project_options)
-include(${CMAKE_CURRENT_SOURCE_DIR}/options.cmake)
+include(replace_this_options)
+include(replace_this_fetch_project_options)
 
-project(starter VERSION 0.0.1 LANGUAGES CXX)
+project(replace_this VERSION 0.0.1 LANGUAGES CXX)
 
-# Customize project_options
-include(enable_customized_project_options)
+# Propagate customized project_options. That is,
+# - Some global project settings like default C++ version and so on.
+# - `replace_this_project_options` and `replace_this_project_warnings` interface libraries that contain C++ options
+include(replace_this_custom_project_options)
 
 # workaround: RPATH stuff
 # !!!NOT RECOMMENDED!!! see https://github.com/ossf/wg-best-practices-os-developers/blob/main/docs/Compiler-Hardening-Guides/Compiler-Options-Hardening-Guide-for-C-and-C%2B%2B.md
 include(rpath)
 
-if(starter_BUILD_TESTING OR starter_BUILD_FUZZ_TESTING)
+if(replace_this_BUILD_TESTING OR replace_this_BUILD_FUZZ_TESTING)
   # Include CTest before any tests
   include(CTest)
 
   # Add handy test wrappers
   include(add_test)
 
-  if(starter_BUILD_TESTING)
+  if(replace_this_BUILD_TESTING)
     # Common test config
     add_test_config(common
       DEPENDENCIES_CONFIG
       Catch2
 
       LIBRARIES
-      starter_project_options
-      starter_project_warnings
+      replace_this_project_options
+      replace_this_project_warnings
 
       SYSTEM_LIBRARIES
       Catch2::Catch2WithMain
@@ -38,14 +40,14 @@ if(starter_BUILD_TESTING OR starter_BUILD_FUZZ_TESTING)
     )
   endif()
 
-  if(starter_BUILD_FUZZ_TESTING)
-    add_library(starter_project_libfuzzer INTERFACE)
-    target_link_libraries(starter_project_libfuzzer
+  if(replace_this_BUILD_FUZZ_TESTING)
+    add_library(replace_this_project_libfuzzer INTERFACE)
+    target_link_libraries(replace_this_project_libfuzzer
       INTERFACE
       -coverage
       -fsanitize=fuzzer,undefined,address
     )
-    target_compile_options(starter_project_libfuzzer
+    target_compile_options(replace_this_project_libfuzzer
       INTERFACE
       -fsanitize=fuzzer,undefined,address
     )
@@ -66,8 +68,8 @@ package_project(
   my_app
   my_lib
   my_header_only_lib
-  starter_project_options
-  starter_project_warnings
+  replace_this_project_options
+  replace_this_project_warnings
 )
 
 detect_architecture(arch)
