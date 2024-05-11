@@ -4,6 +4,7 @@
 
 The usage steps of this template can be divided into
 
+- Rename
 - Configure
   - [Option 1: only use cmake (the conan part is handled by cmake automatically)](#configure-option-1-only-use-cmake)
   - [Option 2: invoke conan, then cmake](#configure-option-2-invoke-conan-then-cmake)
@@ -15,6 +16,14 @@ The usage steps of this template can be divided into
 Note that vcpkg can also be handled like [configure option 1](#configure-option-1-only-use-cmake), see [aminya/cpp_vcpkg_project](https://github.com/aminya/cpp_vcpkg_project).
 
 In addition, the appendix gives a hint on [almost-always-use-conan style usage](#almost-always-use-conan).
+
+## Rename
+
+First, rename all `replace_this` in file contents and file names to a project name you like. You can do this via the script `rename_project.py` in `script.py` folder:
+
+```bash
+python3 script/rename_project.py <project_root_path> <new_project_name>
+```
 
 ## Configure option 1: only use cmake
 
