@@ -4,6 +4,8 @@
 - [setup-cpp](https://github.com/aminya/setup-cpp)
 - CMake
   - [CMake Reference Documentation — CMake Documentation](https://cmake.org/cmake/help/latest/)
+  - [Modern CMake for C++](https://github.com/PacktPublishing/Modern-CMake-for-Cpp)
+  - [Effective CMake - Daniel Pfeifer - C++Now 2017](https://www.youtube.com/watch?v=bsXLMQ6WgIk)
 - Conan
   - [Conan Docs](https://docs.conan.io/2/index.html)
     - Tutorial

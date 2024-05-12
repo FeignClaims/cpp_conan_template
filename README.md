@@ -61,4 +61,6 @@ The repository is templated from [cpp-best-practices/gui_starter_template](https
 
 This repository highly depends on [aminya/project_options](https://github.com/aminya/project_options), which improves the CMake experience a lot.
 
+I learnt CMake from scrach using [*Modern CMake for C++*](https://github.com/PacktPublishing/Modern-CMake-for-Cpp).
+
 For conan 2.0, [here](https://docs.conan.io/2.0/index.html) is the official documentation.
