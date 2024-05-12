@@ -4,8 +4,8 @@
 # Note that this module should be included this module after `project(...)`.
 include_guard()
 
-if(NOT _sample_project_name_project_options_POPULATED)
-  message(FATAL_ERROR "please `include(sample_project_name_fetch_project_options)`")
+if(NOT _sample_project_project_options_POPULATED)
+  message(FATAL_ERROR "please `include(sample_project_fetch_project_options)`")
 endif()
 
 # compile_commands.json
@@ -29,7 +29,7 @@ set(ENABLE_NATIVE_OPTIMIZATION_DEFAULT ON)
 
 dynamic_project_options(
   PREFIX
-  "sample_project_name" # set a prefix in case this project is used as a subproject
+  "sample_project" # set a prefix in case this project is used as a subproject
 
   MSVC_WARNINGS
   /W4 # Baseline reasonable warnings

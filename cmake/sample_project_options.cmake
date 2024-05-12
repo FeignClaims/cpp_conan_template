@@ -12,5 +12,5 @@ endif()
 
 include(CMakeDependentOption)
 
-cmake_dependent_option(sample_project_name_BUILD_TESTING "Building the test tree." ON "${is_standalone}" OFF)
-option(sample_project_name_BUILD_FUZZ_TESTING "Building the fuzz test tree." OFF)
+cmake_dependent_option(sample_project_BUILD_TESTING "Building the test tree." ON "${is_standalone}" OFF)
+option(sample_project_BUILD_FUZZ_TESTING "Building the fuzz test tree." OFF)

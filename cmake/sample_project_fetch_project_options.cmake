@@ -9,14 +9,14 @@ include_guard()
 
 macro(fetch_project_options git_repository git_tag)
   include(FetchContent)
-  FetchContent_Declare(_sample_project_name_project_options
+  FetchContent_Declare(_sample_project_project_options
     GIT_REPOSITORY ${git_repository}
     GIT_TAG ${git_tag}
     GIT_SHALLOW true
   )
-  FetchContent_MakeAvailable(_sample_project_name_project_options)
-  include(${_sample_project_name_project_options_SOURCE_DIR}/Index.cmake)
-  include(${_sample_project_name_project_options_SOURCE_DIR}/src/DynamicProjectOptions.cmake)
+  FetchContent_MakeAvailable(_sample_project_project_options)
+  include(${_sample_project_project_options_SOURCE_DIR}/Index.cmake)
+  include(${_sample_project_project_options_SOURCE_DIR}/src/DynamicProjectOptions.cmake)
 endmacro()
 
 fetch_project_options(https://github.com/aminya/project_options.git v0.35.1)

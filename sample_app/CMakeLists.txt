@@ -11,8 +11,8 @@ target_sources(sample_app_library
 target_include_interface_directories(sample_app_library include) # Includes
 target_link_libraries(sample_app_library
   PRIVATE
-  sample_project_name_project_options
-  sample_project_name_project_warnings
+  sample_project_project_options
+  sample_project_project_warnings
 )
 
 target_find_dependencies(sample_app_library # Find dependencies
@@ -37,11 +37,11 @@ target_sources(sample_app
 target_link_libraries(sample_app
   PRIVATE
   sample_app_library
-  sample_project_name_project_options
-  sample_project_name_project_warnings
+  sample_project_project_options
+  sample_project_project_warnings
 )
 
 # Tests
-if(sample_project_name_BUILD_TESTING)
+if(sample_project_BUILD_TESTING)
   add_subdirectory(test)
 endif()
