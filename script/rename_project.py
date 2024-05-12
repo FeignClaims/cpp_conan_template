@@ -1,32 +1,42 @@
-import subprocess
+#!/usr/bin/env python3
 import os
+import fnmatch
 import sys
 
 
-def replace_in_files_and_filenames(directory, search_text, replace_text):
-    git_files = subprocess.check_output(['git', 'ls-files'], cwd=directory, text=True).splitlines()
+def replace_file_content(file_path, search_text, replace_text):
+    with open(file_path, 'r') as file:
+        content = file.read()
 
-    for item_path in git_files:
-        # Replace in file names
-        new_item_path = item_path.replace(search_text, replace_text)
-        if item_path != new_item_path:
-            os.rename(os.path.join(directory, item_path), os.path.join(directory, new_item_path))
+    new_content = content.replace(search_text, replace_text)
 
-        # Replace in file contents
-        with open(os.path.join(directory, new_item_path), 'r') as file:
-            file_content = file.read()
-        new_content = file_content.replace(search_text, replace_text)
-        with open(os.path.join(directory, new_item_path), 'w') as file:
-            file.write(new_content)
+    with open(file_path, 'w') as file:
+        file.write(new_content)
+
+
+def replace_in_directory(directory_path, search_pattern, replace_text, patterns):
+    for root, _, files in os.walk(directory_path):
+        for file in files:
+            if any(fnmatch.fnmatch(file, pattern) for pattern in patterns):
+                file_path = os.path.join(root, file)
+
+                # Replace in file contents
+                replace_file_content(file_path, search_pattern, replace_text)
+
+                # Replace in file name
+                os.rename(file_path, os.path.join(root, file.replace(search_pattern, replace_text)))
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 3:
-        print("Usage: python3 rename_project.py <project_root_path> <new_project_name>")
+    if len(sys.argv) != 2:
+        print("Usage: python3 rename_project.py <new_project_name>")
         sys.exit(1)
 
-    directory = sys.argv[1]
-    search_text = "replace_this"
-    replace_text = sys.argv[2]
-
-    replace_in_files_and_filenames(directory, search_text, replace_text)
+    replace_in_directory(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                         "replace_this",
+                         sys.argv[1],
+                         ["CMakeLists.txt", "README*", "*.cmake", "*.cpp", "*.hpp"])
+    replace_in_directory(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                         "REPLACE_THIS",
+                         sys.argv[1].upper(),
+                         ["CMakeLists.txt", "README*", "*.cmake", "*.cpp", "*.hpp"])

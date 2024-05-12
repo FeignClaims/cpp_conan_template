@@ -22,7 +22,7 @@ In addition, the appendix gives a hint on [almost-always-use-conan style usage](
 First, rename all `replace_this` in file contents and file names to a project name you like. You can do this via the script `rename_project.py` in `script.py` folder:
 
 ```bash
-python3 script/rename_project.py <project_root_path> <new_project_name>
+python3 script/rename_project.py <new_project_name>
 ```
 
 ## Configure option 1: only use cmake
