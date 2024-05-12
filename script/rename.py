@@ -21,21 +21,24 @@ def replace_file_name(file_path, search_text, replace_text):
             os.path.basename(file_path).replace(search_text, replace_text)))
 
 
-def replace(directory_path, search_text, replace_text, file_patterns):
+def replace_directories(directory_path, search_text, replace_text):
     for root, dirs, _ in os.walk(directory_path, topdown=False):
         for dir in dirs:
             replace_file_name(os.path.join(root, dir), search_text, replace_text)
 
+
+def replace_files(directory_path, search_text, replace_text, file_patterns):
     for root, _, files in os.walk(directory_path):
         for file in files:
             if any(fnmatch.fnmatch(file, pattern) for pattern in file_patterns):
                 file_path = os.path.join(root, file)
-
-                # Replace in file contents
                 replace_file_content(file_path, search_text, replace_text)
+                replace_file_name(file_path, search_text, replace_text)
 
-                # Replace in file name
-                replace_file_name(os.path.join(root, file), search_text, replace_text)
+
+def replace(directory_path, search_text, replace_text, file_patterns):
+    replace_directories(directory_path, search_text, replace_text)
+    replace_files(directory_path, search_text, replace_text, file_patterns)
 
 
 if __name__ == "__main__":
