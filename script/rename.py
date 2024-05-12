@@ -13,11 +13,16 @@ def replace_file_content(file_path, search_text, replace_text):
     with open(file_path, 'w') as file:
         file.write(new_content)
 
+
 def replace_file_name(file_path, search_text, replace_text):
-    os.rename(file_path, os.path.join(os.path.dirname(file_path), os.path.basename(file_path).replace(search_text, replace_text)))
+    os.rename(
+        file_path, os.path.join(
+            os.path.dirname(file_path),
+            os.path.basename(file_path).replace(search_text, replace_text)))
+
 
 def replace(directory_path, search_text, replace_text, file_patterns):
-    for root, dirs, _ in os.walk(directory_path):
+    for root, dirs, _ in os.walk(directory_path, topdown=False):
         for dir in dirs:
             replace_file_name(os.path.join(root, dir), search_text, replace_text)
 
