@@ -1,1 +1,1 @@
-add_library_test(sample_header_only_lib to_string CONFIGS common SOURCES to_string.cpp)
+add_library_test(sample_header_only_lib concat CONFIGS common SOURCES concat.cpp)

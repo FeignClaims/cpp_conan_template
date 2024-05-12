@@ -9,10 +9,14 @@ target_link_libraries(sample_header_only_lib
 target_find_dependencies(sample_header_only_lib # Find dependencies
   INTERFACE_CONFIG
   fmt
+  range-v3
+  Microsoft.GSL
 )
 target_link_system_libraries(sample_header_only_lib # Link dependencies
   INTERFACE
   fmt::fmt
+  range-v3::range-v3
+  Microsoft.GSL::GSL
 )
 
 # Tests

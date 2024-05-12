@@ -1,7 +1,7 @@
 add_library(sample_lib)
 target_sources(sample_lib
   PRIVATE
-  src/sort.cpp
+  src/concat.cpp
 )
 target_include_interface_directories(sample_lib include) # Includes
 target_link_libraries(sample_lib
@@ -12,11 +12,15 @@ target_link_libraries(sample_lib
 
 target_find_dependencies(sample_lib # Find dependencies
   PRIVATE_CONFIG
+  fmt
   range-v3
+  Microsoft.GSL
 )
 target_link_system_libraries(sample_lib # Link dependencies
   PRIVATE
+  fmt::fmt
   range-v3::range-v3
+  Microsoft.GSL::GSL
 )
 
 # Tests
