@@ -17,7 +17,7 @@ It includes:
 
 - a basic example on how to manage dependencies using conan and use it simply
 - an example github action testing working on Linux/MacOS/Windows
-- examples for testing using [boost-ext/ut](https://github.com/boost-ext/ut)
+- examples for testing using [catchorg/Catch2]([https://github.com/boost-ext/ut](https://github.com/catchorg/Catch2))
 
 It requires:
 
