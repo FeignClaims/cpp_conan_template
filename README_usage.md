@@ -19,18 +19,18 @@ In addition, the appendix gives a hint on [almost-always-use-conan style usage](
 
 ## Rename
 
-First, rename all `replace_this` in file contents and file names to a project name you like. You can do this via the script `rename.py` in `script.py` folder:
+First, rename all `sample_project_name` in file contents and file names to a project name you like. You can do this via the script `rename.py` in `script.py` folder:
 
 ```bash
-python3 script/rename.py replace_this <new_project_name>
+python3 script/rename.py sample_project_name <new_project_name>
 ```
 
 You can also do this to the sample C++ executable, header-only library and library:
 
 ```bash
-python3 script/rename.py my_app <new_app_name>
-python3 script/rename.py my_header_only_lib <new_header_only_lib_name>
-python3 script/rename.py my_lib <new_lib_name>
+python3 script/rename.py sample_app <new_app_name>
+python3 script/rename.py sample_header_only_lib <new_header_only_lib_name>
+python3 script/rename.py sample_lib <new_lib_name>
 ```
 
 :warning: For simplicity, the script has hardcoded to replace all files inside the parent directory of where the script located (`dirname(dirname(abspath(__file__))`). DON'T move the script to somewhere else.
@@ -46,7 +46,7 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 include(fetch_project_options)
 
 run_conan()
-project(replace_this VERSION 0.0.1 LANGUAGES CXX)
+project(sample_project_name VERSION 0.0.1 LANGUAGES CXX)
 ```
 
 By adding this line of code, we enable cmake to use conan automatically, all we need to do is to configure cmake as usual. For example:

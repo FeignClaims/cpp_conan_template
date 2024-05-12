@@ -6,9 +6,9 @@ target_sources(fuzz_tester
 )
 target_link_libraries(fuzz_tester
   PRIVATE
-  replace_this_project_options
-  replace_this_project_warnings
-  replace_this_project_libfuzzer
+  sample_project_name_project_options
+  sample_project_name_project_warnings
+  sample_project_name_project_libfuzzer
 )
 target_find_dependencies(fuzz_tester
   PRIVATE_CONFIG
