@@ -4,7 +4,7 @@
 .
 ├── .github
 ├── .vscode
-├── cmake    # cmake modules
+├── cmake    # cmake modules and project options for this project
 ├── conan    # conan config files to be installed by `conan config`
 │ # vvv examples vvv
 ├── sample_app
