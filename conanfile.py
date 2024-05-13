@@ -7,8 +7,8 @@ from conan.tools.scm import Version
 import os
 
 
-class replace_this_recipe(ConanFile):
-    name = "replace_this"
+class sample_project_recipe(ConanFile):
+    name = "sample_project"
     description = "A CMake template using Conan 2"
     license = "Unlicense"
     url = "https://github.com/FeignClaims/cpp_conan_template"
@@ -98,9 +98,9 @@ class replace_this_recipe(ConanFile):
     def generate(self):
         CMakeDeps(self).generate()
         toolchain = CMakeToolchain(self)
-        toolchain.cache_variables["replace_this_BUILD_TESTING"] = not self.conf.get(
+        toolchain.cache_variables["sample_project_BUILD_TESTING"] = not self.conf.get(
             "tools.build:skip_test", default=False)
-        toolchain.cache_variables["replace_this_BUILD_FUZZ_TESTING"] = False
+        toolchain.cache_variables["sample_project_BUILD_FUZZ_TESTING"] = False
         toolchain.presets_prefix = ""
         toolchain.generate()
 
@@ -125,7 +125,7 @@ class replace_this_recipe(ConanFile):
         rm(self, "*.pdb", os.path.join(self.package_folder, "bin"))
 
     def package_info(self):
-        self.cpp_info.libs = ["replace_this"]
+        self.cpp_info.libs = ["sample_project"]
 
-        self.cpp_info.set_property("cmake_file_name", "replace_this")
-        self.cpp_info.set_property("cmake_target_name", "replace_this::replace_this")
+        self.cpp_info.set_property("cmake_file_name", "sample_project")
+        self.cpp_info.set_property("cmake_target_name", "sample_project::sample_project")

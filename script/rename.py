@@ -52,8 +52,8 @@ if __name__ == "__main__":
     replace(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
             sys.argv[1],
             sys.argv[2],
-            ["CMakeLists.txt", "README*", "*.cmake", "*.cpp", "*.hpp"])
+            ["CMakeLists.txt", "README*", "*.cmake", "*.cpp", "*.hpp", "conanfile.*"])
     replace(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
             sys.argv[1].upper(),
             sys.argv[2].upper(),
-            ["CMakeLists.txt", "README*", "*.cmake", "*.cpp", "*.hpp"])
+            ["CMakeLists.txt", "README*", "*.cmake", "*.cpp", "*.hpp", "conanfile.*"])
