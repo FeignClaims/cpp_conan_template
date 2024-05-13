@@ -4,7 +4,7 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 include(sample_project_options)
 include(sample_project_fetch_project_options)
 
-project(sample_project VERSION 0.0.1 LANGUAGES CXX)
+project(sample_project VERSION 1.0.0 LANGUAGES CXX)
 
 # Propagate customized project_options. That is,
 # - Some global project settings like default C++ version and so on.
