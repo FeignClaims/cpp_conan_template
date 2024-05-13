@@ -68,6 +68,7 @@ CheckOptions:
   # readability-identifier-naming.TemplateParameterCase: Leading_upper_snake_case
   # readability-identifier-naming.TemplateTemplateParameterCase: Leading_upper_snake_case
   # readability-identifier-naming.TypeAliasCase: Leading_upper_snake_case
+  # readability-identifier-naming.TypeAliasIgnoredRegexp: "[a-z_]+_type"
   # readability-identifier-naming.TypedefCase: Leading_upper_snake_case
   # readability-identifier-naming.TypeTemplateParameterCase: Leading_upper_snake_case
   # readability-identifier-naming.UnionCase: Leading_upper_snake_case
