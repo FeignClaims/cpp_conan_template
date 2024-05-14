@@ -1,0 +1,22 @@
+# An example on how to specialize a conan profile for the corresponding github action job
+#
+# The specialization sets libcxx to libc++ directly, since it can't be detected
+{% set compiler, version, compiler_exe = detect_api.detect_clang_compiler() %}
+{% set converted_version = detect_api.default_compiler_version(compiler, version) %}
+{% set arch = detect_api.detect_arch() %}
+{% set os = detect_api.detect_os() %}
+
+[settings]
+arch={{ arch }}
+compiler={{ compiler }}
+compiler.cppstd=20
+# compiler.runtime=dynamic
+# compiler.runtime_version=v143
+compiler.libcxx=libc++
+compiler.version={{ converted_version }}
+os={{ os }}
+
+[conf]
+&:tools.cmake.cmaketoolchain:generator=Ninja Multi-Config
+tools.system.package_manager:mode=install
+tools.system.package_manager:sudo=True

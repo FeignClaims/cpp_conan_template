@@ -1,0 +1,17 @@
+{% set compiler, version, _ = detect_api.detect_msvc_compiler() %}
+{% set runtime, _ = detect_api.default_msvc_runtime(compiler) %}
+{% set arch = detect_api.detect_arch() %}
+{% set os = detect_api.detect_os() %}
+
+[settings]
+arch={{ arch }}
+compiler={{ compiler }}
+compiler.cppstd=20
+compiler.runtime={{ runtime }}
+compiler.version={{ version }}
+os={{ os }}
+
+[conf]
+&:tools.cmake.cmaketoolchain:generator=Visual Studio 17 2022
+tools.system.package_manager:mode=install
+tools.system.package_manager:sudo=True
