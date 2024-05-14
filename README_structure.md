@@ -4,8 +4,11 @@
 .
 ├── .github
 ├── .vscode
-├── cmake    # cmake modules and project options for this project
-├── conan    # conan config files to be installed by `conan config`
+├── cmake  # cmake modules and project options for this project
+├── conan  # conan config files to be installed by `conan config`
+├── script
+│   ├── match_conan_profile.py  # match the most suitable conan profile for the input config
+│   └── rename.py  # renames the project/target name to a new name
 │ # vvv examples vvv
 ├── sample_app
 ├── sample_header_only_lib
