@@ -61,7 +61,7 @@ runs:
       if: inputs.recipe_repository != ''
       shell: bash
       run: |
-        conan remote add local conan_recipes -f
+        conan remote add local conan_recipes
 
     - name: Cleanup conan system packages (they are not properly cached)
       shell: bash
