@@ -144,7 +144,7 @@ jobs:
         if: runner.os == 'Windows' && matrix.build_type == 'Debug'
         working-directory: build/${{ matrix.compiler_name }}
         run: |
-          OpenCppCoverage.exe --export_type cobertura:coverage.xml --cover_children -- ctest -C ${{matrix.build_type}}
+          OpenCppCoverage.exe --export_type cobertura:coverage.xml --cover_children -- ctest -C ${{ matrix.build_type }}
 
       - name: Publish to codecov
         if: matrix.build_type == 'Debug'
