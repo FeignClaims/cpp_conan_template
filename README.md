@@ -2,6 +2,7 @@
 
 [![ci](https://github.com/FeignClaims/cpp_conan_template/actions/workflows/ci.yml/badge.svg)](https://github.com/FeignClaims/cpp_conan_template/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/FeignClaims/cpp_conan_template/graph/badge.svg?token=BQEOMHO4P6)](https://codecov.io/gh/FeignClaims/cpp_conan_template)
+[![CodeQL](https://github.com/FeignClaims/cpp_conan_template/actions/workflows/codeql.yml/badge.svg)](https://github.com/FeignClaims/cpp_conan_template/actions/workflows/codeql.yml)
 
 > Write your own conan profile and conanfile, then cmake using the generated toochians.
 
