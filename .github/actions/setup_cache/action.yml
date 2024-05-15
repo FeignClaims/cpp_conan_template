@@ -15,7 +15,7 @@ runs:
   using: "composite"
   steps:
     - name: Cache software caches
-      uses: actions/cache@v3
+      uses: actions/cache@v4.0.2
       with:
         path: |
           ~/.cache/pip
@@ -25,7 +25,7 @@ runs:
           ${{ runner.os }}-${{ inputs.compiler }}-${{ inputs.build_type }}
 
     - name: Cache conan
-      uses: actions/cache@v3
+      uses: actions/cache@v4.0.2
       with:
         path: ~/.conan2/p
         key: ${{ runner.os }}-${{ inputs.compiler }}-${{ inputs.build_type }}-${{ inputs.developer_mode }}-${{ hashFiles('conanfile.py', 'conanfile.txt') }}
