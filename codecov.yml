@@ -1,0 +1,9 @@
+coverage:
+  status:
+    project:
+      default:
+        target: auto
+        threshold: 5
+comment:
+  layout: "files, diff, flags, tree, footer"
+  require_changes: true
