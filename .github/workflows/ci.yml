@@ -121,9 +121,10 @@ jobs:
         uses: ./.github/actions/setup_conan
         id: conan
         with:
-          profile: ${{ matrix.os }}-${{ matrix.compiler_name }}-x86_64
-          config_folder: ./conan
-          args: -s 'build_type=${{ matrix.build_type }}'
+          os: ${{ matrix.os }}
+          arch: x86_64
+          compiler: ${{ matrix.compiler }}
+          build_type: ${{ matrix.build_type }}
 
       - name: Configure cmake
         run: |
