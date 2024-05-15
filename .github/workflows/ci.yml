@@ -36,6 +36,7 @@ jobs:
         compiler:
           # you can specify the version after `-` like "llvm-13.0.0".
           - llvm
+          - llvm-17.0.6
           - gcc-13
           - msvc
         build_type:
@@ -52,6 +53,10 @@ jobs:
           - os: macos-12
             compiler: msvc
 
+          # FIXME: Until aminya/setup-cpp supports macos arm64
+          - os: macos-12
+            compiler: llvm-17.0.6
+
           # FIXME: Solve annotated_string mismatch in Windows to enable developer mode totally
           - os: windows-2022
             compiler: msvc
@@ -64,11 +69,15 @@ jobs:
           # Inject gcov_executable variable
           - compiler: llvm
             gcov_executable: "llvm-cov gcov"
+          - compiler: llvm-17.0.6
+            gcov_executable: "llvm-cov gcov"
           - compiler: gcc-13
             gcov_executable: gcov-13
 
           # Inject actual compiler name
           - compiler: llvm
+            compiler_name: clang
+          - compiler: llvm-17.0.6
             compiler_name: clang
           - compiler: gcc-13
             compiler_name: gcc
@@ -82,7 +91,7 @@ jobs:
 
     steps:
       - name: Linux - Maximize build disk space
-        uses: easimon/maximize-build-space@v8
+        uses: easimon/maximize-build-space@v10
         if: runner.os == 'Linux'
         with:
           root-reserve-mb: 30720
@@ -101,7 +110,7 @@ jobs:
           developer_mode: ${{ matrix.developer_mode }}
 
       - name: Setup cpp
-        uses: aminya/setup-cpp@v1
+        uses: aminya/setup-cpp@v0.37.0
         with:
           compiler: ${{ matrix.compiler }}
           vcvarsall: ${{ contains(matrix.os, 'windows')}}
@@ -114,7 +123,7 @@ jobs:
           cppcheck: true
           clangtidy: true
 
-          gcovr: 7.2
+          gcovr: 7.2 # The default version 5.2 stucks on macos gcc
           opencppcoverage: true
 
       - name: Setup conan
@@ -135,27 +144,26 @@ jobs:
           conan build . ${{ steps.conan.outputs.args }}
 
       - name: Unix - Coverage
-        if: runner.os != 'Windows' && matrix.build_type == 'Debug'
+        if: runner.os != 'Windows'
         working-directory: build/${{ matrix.compiler_name }}
         run: |
           ctest -C ${{ matrix.build_type }}
           gcovr -j ${{ env.nproc }} --delete --root ../../ --print-summary --xml-pretty --xml coverage.xml . --gcov-executable '${{ matrix.gcov_executable }}'
 
       - name: Windows - Coverage
-        if: runner.os == 'Windows' && matrix.build_type == 'Debug'
+        if: runner.os == 'Windows'
         working-directory: build/${{ matrix.compiler_name }}
         run: |
           OpenCppCoverage.exe --export_type cobertura:coverage.xml --cover_children -- ctest -C ${{ matrix.build_type }}
 
       - name: Publish to codecov
-        if: matrix.build_type == 'Debug'
-        uses: codecov/codecov-action@v3
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        uses: codecov/codecov-action@v4.4.0
         with:
+          files: ./build/${{ matrix.compiler_name }}/coverage.xml
           flags: ${{ runner.os }}
           name: ${{ runner.os }}-coverage
-          files: ./build/${{ matrix.compiler_name }}/coverage.xml
+          token: ${{ secrets.CODECOV_TOKEN }}
+          verbose: true
 
       - name: CPack
         if: matrix.package_generator != ''
@@ -164,7 +172,7 @@ jobs:
           cpack -C ${{ matrix.build_type }} -G ${{ matrix.package_generator }} -B _package -V
 
       - name: Publish tagged
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2.0.5
         if: ${{ startsWith(github.ref, 'refs/tags/') && matrix.package_generator != '' }}
         with:
           files: |
