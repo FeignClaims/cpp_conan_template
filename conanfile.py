@@ -107,7 +107,7 @@ class sample_project_recipe(ConanFile):
     def build(self):
         cmake = CMake(self)
         cmake.configure()
-        cmake.build()
+        cmake.build(cli_args=["-v"])
         if not self.conf.get("tools.build:skip_test", default=False):
             cmake.ctest(cli_args=["--rerun-failed", "--output-on-failure"])
 
