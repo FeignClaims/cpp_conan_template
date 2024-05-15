@@ -31,11 +31,12 @@ jobs:
       matrix:
         os:
           - ubuntu-22.04
-          - macos-12
+          - macos-13
+          - macos-14  # M1
           - windows-2022
         compiler:
           # you can specify the version after `-` like "llvm-13.0.0".
-          - llvm
+          - llvm-17.0.5
           - gcc-13
           - msvc
         build_type:
@@ -49,7 +50,9 @@ jobs:
         exclude:
           - os: ubuntu-22.04
             compiler: msvc
-          - os: macos-12
+          - os: macos-13
+            compiler: msvc
+          - os: macos-14
             compiler: msvc
 
           # FIXME: Solve annotated_string mismatch in Windows to enable developer mode totally
@@ -62,13 +65,13 @@ jobs:
 
         include:
           # Inject gcov_executable variable
-          - compiler: llvm
+          - compiler: llvm-17.0.5
             gcov_executable: "llvm-cov gcov"
           - compiler: gcc-13
             gcov_executable: gcov-13
 
           # Inject actual compiler name
-          - compiler: llvm
+          - compiler: llvm-17.0.5
             compiler_name: clang
           - compiler: gcc-13
             compiler_name: gcc
@@ -114,7 +117,7 @@ jobs:
           cppcheck: true
           clangtidy: true
 
-          gcovr: 7.2
+          gcovr: true
           opencppcoverage: true
 
       - name: Setup conan
