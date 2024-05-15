@@ -36,6 +36,7 @@ jobs:
         compiler:
           # you can specify the version after `-` like "llvm-13.0.0".
           - llvm
+          - llvm-17.0.6
           - gcc-13
           - msvc
         build_type:
@@ -52,6 +53,10 @@ jobs:
           - os: macos-12
             compiler: msvc
 
+          # FIXME: Until aminya/setup-cpp supports macos arm64
+          - os: macos-12
+            compiler: llvm-17.0.6
+
           # FIXME: Solve annotated_string mismatch in Windows to enable developer mode totally
           - os: windows-2022
             compiler: msvc
@@ -64,11 +69,15 @@ jobs:
           # Inject gcov_executable variable
           - compiler: llvm
             gcov_executable: "llvm-cov gcov"
+          - compiler: llvm-17.0.6
+            gcov_executable: "llvm-cov gcov"
           - compiler: gcc-13
             gcov_executable: gcov-13
 
           # Inject actual compiler name
           - compiler: llvm
+            compiler_name: clang
+          - compiler: llvm-17.0.6
             compiler_name: clang
           - compiler: gcc-13
             compiler_name: gcc
