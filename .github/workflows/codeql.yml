@@ -92,7 +92,7 @@ jobs:
 
       - name: Configure cmake
         run: |
-          cmake --preset ${{ steps.conan.outputs.compiler_name }} ${{ steps.conan.outputs.compiler_name == 'msvc' && '-A x64 -T v143' || '' }} -D ENABLE_DEVELOPER_MODE:BOOL=${{ matrix.developer_mode }} -D OPT_ENABLE_COVERAGE:BOOL=${{ matrix.build_type == 'Debug' }}
+          cmake --preset ${{ steps.conan.outputs.compiler_name }} ${{ steps.conan.outputs.compiler_name == 'msvc' && '-A x64 -T v143' || '' }} -D ENABLE_DEVELOPER_MODE:BOOL=${{ matrix.developer_mode }} -D OPT_ENABLE_COVERAGE:BOOL=${{ matrix.build_type == 'Debug' }} -D OPT_ENABLE_CLANG_TIDY:BOOL=OFF -D OPT_ENABLE_CPPCHECK:BOOL=OFF -D OPT_ENABLE_INCLUDE_WHAT_YOU_USE:BOOL=OFF
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
