@@ -5,5 +5,7 @@ coverage:
         target: auto
         threshold: 5
 comment:
-  layout: "files, diff, flags, tree, footer"
-  require_changes: true
+     layout: "condensed_header, condensed_files, condensed_footer"
+     require_changes: true
+     hide_project_coverage: true
+     after_n_builds: 32  # comment on pr only when ci jobs (currently 32 jobs) are all done
