@@ -86,11 +86,15 @@ runs:
       id: output
       shell: bash
       run: |
-        export HOST_PROFILE=$(python3 script/match_conan_profile.py "${{ steps.parse_os.outputs.name }}-${{ steps.parse_os.outputs.version }}-${{ inputs.arch }}-${{ steps.parse_compiler.outputs.name }}-${{ steps.parse_compiler.outputs.version }}-${{ inputs.build_type }}")
-        export BUILD_PROFILE=default
         echo "home=$(conan config home)" >> "$GITHUB_OUTPUT"
+
+        export HOST_PROFILE=$(python3 script/match_conan_profile.py "${{ steps.parse_os.outputs.name }}-${{ steps.parse_os.outputs.version }}-${{ inputs.arch }}-${{ steps.parse_compiler.outputs.name }}-${{ steps.parse_compiler.outputs.version }}-${{ inputs.build_type }}")
         echo "host_profile=$HOST_PROFILE" >> "$GITHUB_OUTPUT"
+
+        export BUILD_PROFILE=default
         echo "build_profile=$BUILD_PROFILE" >> "$GITHUB_OUTPUT"
+
+        export 
         echo "args=-pr:b '$BUILD_PROFILE' -pr:h '$HOST_PROFILE' -s:h 'build_type=${{ inputs.build_type }}' ${{ inputs.args }}" >> "$GITHUB_OUTPUT"
 
     - name: Install conan config folder
