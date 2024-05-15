@@ -75,11 +75,11 @@ jobs:
           ccache: true
           python: true
 
-          cppcheck: false
-          clangtidy: false
+          cppcheck: true
+          clangtidy: true
 
-          gcovr: false
-          opencppcoverage: false
+          gcovr: 7.2 # The default version 5.2 stucks on macos gcc
+          opencppcoverage: true
 
       - name: Setup conan
         uses: ./.github/actions/setup_conan
@@ -92,7 +92,7 @@ jobs:
 
       - name: Configure cmake
         run: |
-          cmake --preset ${{ steps.conan.outputs.compiler_name }} ${{ steps.conan.outputs.compiler_name == 'msvc' && '-A x64 -T v143' || '' }} -D ENABLE_DEVELOPER_MODE:BOOL=${{ matrix.developer_mode }} -D OPT_ENABLE_COVERAGE:BOOL=${{ matrix.build_type == 'Debug' }} -D OPT_ENABLE_CLANG_TIDY:BOOL=OFF -D OPT_ENABLE_CPPCHECK:BOOL=OFF -D OPT_ENABLE_INCLUDE_WHAT_YOU_USE:BOOL=OFF
+          cmake --preset ${{ steps.conan.outputs.compiler_name }} ${{ steps.conan.outputs.compiler_name == 'msvc' && '-A x64 -T v143' || '' }} -D ENABLE_DEVELOPER_MODE:BOOL=${{ matrix.developer_mode }} -D OPT_ENABLE_COVERAGE:BOOL=${{ matrix.build_type == 'Debug' }}
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
