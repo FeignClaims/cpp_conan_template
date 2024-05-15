@@ -1,0 +1,107 @@
+# For most projects, this workflow file will not need changing; you simply need
+# to commit it to your repository.
+#
+# You may wish to alter this file to override the set of languages analyzed,
+# or to provide custom queries or build logic.
+#
+# ******** NOTE ********
+# We have attempted to detect the languages in your repository. Please check
+# the `language` matrix defined below to confirm you have the correct set of
+# supported CodeQL languages.
+#
+name: CodeQL
+
+on:
+  pull_request:
+  push:
+    tags: "*"
+    branches:
+      - main
+      - develop
+  schedule:
+    - cron: "38 0 * * 5"
+  workflow_dispatch:
+
+jobs:
+  Analyze:
+    name: Analyze
+    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
+    runs-on: ${{ matrix.os }}
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-22.04
+        compiler:
+          - gcc-13
+        build_type:
+          - Debug
+        developer_mode:
+          - ON
+
+    steps:
+      - name: Linux - Maximize build disk space
+        uses: easimon/maximize-build-space@v10
+        if: runner.os == 'Linux'
+        with:
+          root-reserve-mb: 30720
+          swap-size-mb: 1024
+          remove-android: "true"
+          remove-docker-images: "true"
+          remove-dotnet: "true"
+
+      - uses: actions/checkout@v4
+
+      - name: Setup cache
+        uses: ./.github/actions/setup_cache
+        with:
+          compiler: ${{ matrix.compiler }}
+          build_type: ${{ matrix.build_type }}
+          developer_mode: ${{ matrix.developer_mode }}
+
+      - name: Setup Cpp
+        uses: aminya/setup-cpp@v0.37.0
+        with:
+          compiler: ${{ matrix.compiler }}
+          vcvarsall: ${{ contains(matrix.os, 'windows') }}
+
+          cmake: true
+          ninja: true
+          ccache: true
+          python: true
+
+          cppcheck: false
+          clangtidy: false
+
+          gcovr: false
+          opencppcoverage: false
+
+      - name: Setup conan
+        uses: ./.github/actions/setup_conan
+        id: conan
+        with:
+          os: ${{ matrix.os }}
+          arch: x86_64
+          compiler: ${{ matrix.compiler }}
+          build_type: ${{ matrix.build_type }}
+
+      - name: Configure cmake
+        run: |
+          cmake --preset ${{ steps.conan.outputs.compiler_name }} ${{ steps.conan.outputs.compiler_name == 'msvc' && '-A x64 -T v143' || '' }} -D ENABLE_DEVELOPER_MODE:BOOL=${{ matrix.developer_mode }} -D OPT_ENABLE_COVERAGE:BOOL=${{ matrix.build_type == 'Debug' }}
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: cpp
+
+      - name: Build and test
+        run: |
+          conan build . ${{ steps.conan.outputs.args }}
+
+      - name: Perform CodeQL analysis
+        uses: github/codeql-action/analyze@v3
