@@ -1,0 +1,20 @@
+# An example on how to specialize a conan profile for the corresponding github action job
+#
+# The specialization sets compiler.version directly to detect the corresponding compiler
+{% set arch = detect_api.detect_arch() %}
+{% set os = detect_api.detect_os() %}
+
+[settings]
+arch={{ arch }}
+compiler=clang
+compiler.cppstd=20
+# compiler.runtime=dynamic
+# compiler.runtime_version=v143
+compiler.libcxx=libc++
+compiler.version=16
+os={{ os }}
+
+[conf]
+&:tools.cmake.cmaketoolchain:generator=Ninja Multi-Config
+tools.system.package_manager:mode=install
+tools.system.package_manager:sudo=True
