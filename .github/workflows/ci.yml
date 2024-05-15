@@ -74,16 +74,6 @@ jobs:
           - compiler: gcc-13
             gcov_executable: gcov-13
 
-          # Inject actual compiler name
-          - compiler: llvm
-            compiler_name: clang
-          - compiler: llvm-17.0.6
-            compiler_name: clang
-          - compiler: gcc-13
-            compiler_name: gcc
-          - compiler: msvc
-            compiler_name: msvc
-
           # Enable package for release build
           - build_type: Release
             developer_mode: OFF
@@ -137,7 +127,7 @@ jobs:
 
       - name: Configure cmake
         run: |
-          cmake --preset ${{ matrix.compiler_name }} ${{ matrix.compiler_name == 'msvc' && '-A x64 -T v143' || '' }} -D ENABLE_DEVELOPER_MODE:BOOL=${{ matrix.developer_mode }} -D OPT_ENABLE_COVERAGE:BOOL=${{ matrix.build_type == 'Debug' }}
+          cmake --preset ${{ steps.conan.outputs.compiler_name }} ${{ steps.conan.outputs.compiler_name == 'msvc' && '-A x64 -T v143' || '' }} -D ENABLE_DEVELOPER_MODE:BOOL=${{ matrix.developer_mode }} -D OPT_ENABLE_COVERAGE:BOOL=${{ matrix.build_type == 'Debug' }}
 
       - name: Build and test
         run: |
@@ -145,21 +135,21 @@ jobs:
 
       - name: Unix - Coverage
         if: runner.os != 'Windows'
-        working-directory: build/${{ matrix.compiler_name }}
+        working-directory: build/${{ steps.conan.outputs.compiler_name }}
         run: |
           ctest -C ${{ matrix.build_type }}
           gcovr -j ${{ env.nproc }} --delete --root ../../ --print-summary --xml-pretty --xml coverage.xml . --gcov-executable '${{ matrix.gcov_executable }}'
 
       - name: Windows - Coverage
         if: runner.os == 'Windows'
-        working-directory: build/${{ matrix.compiler_name }}
+        working-directory: build/${{ steps.conan.outputs.compiler_name }}
         run: |
           OpenCppCoverage.exe --export_type cobertura:coverage.xml --cover_children -- ctest -C ${{ matrix.build_type }}
 
       - name: Publish to codecov
         uses: codecov/codecov-action@v4.4.0
         with:
-          files: ./build/${{ matrix.compiler_name }}/coverage.xml
+          files: ./build/${{ steps.conan.outputs.compiler_name }}/coverage.xml
           flags: ${{ runner.os }}
           name: ${{ runner.os }}-coverage
           token: ${{ secrets.CODECOV_TOKEN }}
@@ -167,7 +157,7 @@ jobs:
 
       - name: CPack
         if: matrix.package_generator != ''
-        working-directory: build/${{ matrix.compiler_name }}
+        working-directory: build/${{ steps.conan.outputs.compiler_name }}
         run: |
           cpack -C ${{ matrix.build_type }} -G ${{ matrix.package_generator }} -B _package -V
 
@@ -176,4 +166,4 @@ jobs:
         if: ${{ startsWith(github.ref, 'refs/tags/') && matrix.package_generator != '' }}
         with:
           files: |
-            build/${{ matrix.compiler_name }}/_package/*.*
+            build/${{ steps.conan.outputs.compiler_name }}/_package/*.*
