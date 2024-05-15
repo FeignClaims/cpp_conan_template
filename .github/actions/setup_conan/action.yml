@@ -23,9 +23,12 @@ outputs:
   home:
     description: "The conan home path"
     value: ${{ steps.output.outputs.home }}
-  profile: # FIXME: Separate host and build profile to allow ci for compile compilation
-    description: "The conan profile to be used"
-    value: ${{ steps.output.outputs.profile }}
+  host_profile:
+    description: "The conan host profile to be used"
+    value: ${{ steps.output.outputs.host_profile }}
+  build_profile:
+    description: "The conan build profile to be used"
+    value: ${{ steps.output.outputs.build_profile }}
   args:
     description: "The corresponding args that should be used in conan commands afterwards"
     value: ${{ steps.output.outputs.args }}
@@ -37,6 +40,11 @@ runs:
       shell: bash
       run: |
         pip3 install conan
+
+    - name: Detect conan default profile (used as build profile afterwards)
+      shell: bash
+      run: |
+        conan profile detect
 
     - name: Parse os and os version
       id: parse_os
@@ -66,11 +74,12 @@ runs:
       id: output
       shell: bash
       run: |
-        export PROFILE=$(python3 script/match_conan_profile.py "${{ steps.parse_os.outputs.name }}-${{ steps.parse_os.outputs.version }}-${{ inputs.arch }}-${{ steps.parse_compiler.outputs.name }}-${{ steps.parse_compiler.outputs.version }}-${{ inputs.build_type }}")
+        export HOST_PROFILE=$(python3 script/match_conan_profile.py "${{ steps.parse_os.outputs.name }}-${{ steps.parse_os.outputs.version }}-${{ inputs.arch }}-${{ steps.parse_compiler.outputs.name }}-${{ steps.parse_compiler.outputs.version }}-${{ inputs.build_type }}")
+        export BUILD_PROFILE=default
         echo "home=$(conan config home)" >> "$GITHUB_OUTPUT"
-        # FIXME: Separate host and build profile to allow ci for compile compilation
-        echo "profile=$PROFILE" >> "$GITHUB_OUTPUT"
-        echo "args=-pr:a '$PROFILE' -s:b 'build_type=Release' -s:h 'build_type=${{ inputs.build_type }}' ${{ inputs.args }}" >> "$GITHUB_OUTPUT"
+        echo "host_profile=$HOST_PROFILE" >> "$GITHUB_OUTPUT"
+        echo "build_profile=$BUILD_PROFILE" >> "$GITHUB_OUTPUT"
+        echo "args=-pr:b '$BUILD_PROFILE' -pr:h '$HOST_PROFILE' -s:h 'build_type=${{ inputs.build_type }}' ${{ inputs.args }}" >> "$GITHUB_OUTPUT"
 
     - name: Install conan config folder
       shell: bash
