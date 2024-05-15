@@ -3,7 +3,7 @@ description: "sets up conan"
 inputs:
   os:
     required: true
-    description: "Operator system"
+    description: "Operating system"
   arch:
     required: true
     description: "Architecutre"
