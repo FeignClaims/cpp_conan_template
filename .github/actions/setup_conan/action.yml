@@ -32,6 +32,18 @@ outputs:
   args:
     description: "The corresponding args that should be used in conan commands afterwards"
     value: ${{ steps.output.outputs.args }}
+  os_name:
+    description: "Operating system name (ubuntu converted to linux)"
+    value: ${{ steps.parse_os.outputs.name }}
+  os_version:
+    description: "Operating system version (if not set in inputs.os, set to latest)"
+    value: ${{ steps.parse_os.outputs.version }}
+  compiler_name:
+    description: "Compiler name (llvm converted to clang)"
+    value: ${{ steps.parse_compiler.outputs.name }}
+  compiler_version:
+    description: "Compiler version (if not set in inputs.compiler, set to latest)"
+    value: ${{ steps.parse_compiler.outputs.version }}
 
 runs:
   using: "composite"
