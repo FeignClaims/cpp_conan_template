@@ -114,7 +114,7 @@ jobs:
           cppcheck: true
           clangtidy: true
 
-          gcovr: 7.2
+          gcovr: true
           opencppcoverage: true
 
       - name: Setup conan
