@@ -99,7 +99,7 @@ jobs:
         uses: aminya/setup-cpp@v0.37.0
         with:
           compiler: ${{ matrix.compiler }}
-          vcvarsall: ${{ contains(matrix.os, 'windows')}}
+          vcvarsall: ${{ contains(matrix.os, 'windows') }}
 
           cmake: true
           ninja: true
