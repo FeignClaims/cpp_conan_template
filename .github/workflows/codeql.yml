@@ -45,17 +45,10 @@ jobs:
           - ON
 
     steps:
-      - name: Parse environment
-        id: parsed
-        uses: ./.github/actions/parse_environment
-        with:
-          os: ${{ matrix.os }}
-          compiler: ${{ matrix.compiler }}
-
       # Use this if a fairly large library is requried, like building and using llvm as a library.
       # - name: Linux - Maximize build disk space
       #   uses: easimon/maximize-build-space@v10
-      #   if: steps.parsed.outputs.os_name == 'linux'
+      #   if: runner.os == 'Linux'
       #   with:
       #     root-reserve-mb: 30720
       #     swap-size-mb: 1024
@@ -64,6 +57,13 @@ jobs:
       #     remove-dotnet: "true"
 
       - uses: actions/checkout@v4
+
+      - name: Parse environment
+        id: parsed
+        uses: ./.github/actions/parse_environment
+        with:
+          os: ${{ matrix.os }}
+          compiler: ${{ matrix.compiler }}
 
       - name: Setup cache
         uses: ./.github/actions/setup_cache
