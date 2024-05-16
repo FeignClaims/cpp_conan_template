@@ -8,4 +8,5 @@ comment:
      layout: "condensed_header, condensed_files, condensed_footer"
      require_changes: true
      hide_project_coverage: true
-     after_n_builds: 32  # comment on pr only when ci jobs (currently 32 jobs) are all done
+     # comment on pr only when ci jobs that report coverage (currently 11 jobs) are all done
+     after_n_builds: 11
