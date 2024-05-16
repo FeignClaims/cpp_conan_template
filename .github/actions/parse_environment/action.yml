@@ -1,0 +1,58 @@
+name: "parse_environment"
+description: "Parse environment"
+inputs:
+  os:
+    required: true
+    description: "Operating system"
+  compiler:
+    required: true
+    description: "Compiler"
+outputs:
+  os_name:
+    description: "Operating system name (ubuntu converted to linux)"
+    value: ${{ steps.parse_os.outputs.name }}
+  os_version:
+    description: "Operating system version (if not set in inputs.os, set to latest)"
+    value: ${{ steps.parse_os.outputs.version }}
+  compiler_name:
+    description: "Compiler name (llvm converted to clang)"
+    value: ${{ steps.parse_compiler.outputs.name }}
+  compiler_version:
+    description: "Compiler version (if not set in inputs.compiler, set to latest)"
+    value: ${{ steps.parse_compiler.outputs.version }}
+  gcov_executable:
+    description: "The corresponding gcov_executable (Available only for clang and gcc)"
+    value: ${{ steps.parse_gcov.outputs.value }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Parse os and os version
+      id: parse_os
+      shell: bash
+      env:
+        VALUE: ${{ contains(matrix.os, '-') && matrix.os || format('{0}-{1}', matrix.os, 'latest') }}
+      run: |
+        export NAME=${VALUE%%-*}
+        echo name=${NAME/ubuntu/linux} >> "$GITHUB_OUTPUT"
+
+        export VERSION=${VALUE##*-}
+        echo version=$VERSION >> "$GITHUB_OUTPUT"
+
+    - name: Parse compiler and compiler version
+      id: parse_compiler
+      shell: bash
+      env:
+        VALUE: ${{ contains(matrix.compiler, '-') && matrix.compiler || format('{0}-{1}', matrix.compiler, 'latest') }}
+      run: |
+        export NAME=${VALUE%%-*}
+        echo name=${NAME/llvm/clang} >> "$GITHUB_OUTPUT"
+
+        export VERSION=${VALUE##*-}
+        echo version=$VERSION >> "$GITHUB_OUTPUT"
+
+    - name: Parse gcov
+      id: parse_gcov
+      shell: bash
+      run: |
+        echo "value=${{ contains(matrix.compiler, 'llvm') && 'llvm-cov gcov' || contains(matrix.compiler, 'gcc') && format('{0}-{1}', 'gcov', steps.parse_compiler.outputs.version) || '' }}" >> "$GITHUB_OUTPUT"
