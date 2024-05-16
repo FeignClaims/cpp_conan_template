@@ -1,5 +1,5 @@
 # An example on how to specialize a conan profile for the corresponding github action job
-include(_commom)
+include(_common)
 
 # The specialization sets libcxx to libc++ directly, since it can't be detected
 {% set compiler, version, compiler_exe = detect_api.detect_clang_compiler() %}
