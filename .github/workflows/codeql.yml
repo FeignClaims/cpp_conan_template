@@ -92,7 +92,7 @@ jobs:
         uses: ./.github/actions/setup_conan
         id: conan
         with:
-          host_profile: ${{ steps.parsed.outputs.os_name }}-${{ steps.parsed.outputs.os_version }}-${{ steps.parsed.outputs.compiler_name }}-${{ steps.parsed.outputs.compiler_version }}-${{ matrix.build_type }}-${{ matrix.developer_mode }}
+          host_profile: ${{ steps.parsed.outputs.os_name }}-${{ steps.parsed.outputs.os_version }}-x86_64-${{ steps.parsed.outputs.compiler_name }}-${{ steps.parsed.outputs.compiler_version }}-${{ matrix.build_type }}
           # Fix "ASan runtime does not come first in initial library list; you should either link runtime to your application or manually preload it with LD_PRELOAD."
           # Learnt from https://github.com/igraph/igraph/issues/1181
           args: -c tools.build:cflags+=-static-libasan -c tools.build:cxxflags+=-static-libasan
