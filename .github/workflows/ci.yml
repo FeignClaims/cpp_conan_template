@@ -66,52 +66,52 @@ jobs:
             developer_mode: ON
 
         include:
-          # Inject gcov_executable variable
-          - compiler: llvm
-            gcov_executable: "llvm-cov gcov"
-          - compiler: llvm-16.0.6
-            gcov_executable: "llvm-cov gcov"
-          - compiler: gcc-13
-            gcov_executable: gcov-13
-
           # Enable package for release build
           - build_type: Release
             developer_mode: OFF
             package_generator: ZIP
 
     steps:
-      - name: Linux - Maximize build disk space
-        uses: easimon/maximize-build-space@v10
-        if: runner.os == 'Linux'
-        with:
-          root-reserve-mb: 30720
-          swap-size-mb: 1024
-          remove-android: "true"
-          remove-docker-images: "true"
-          remove-dotnet: "true"
+      # Use this if a fairly large library is requried, like building and using llvm as a library.
+      # - name: Linux - Maximize build disk space
+      #   uses: easimon/maximize-build-space@v10
+      #   if: runner.os == 'Linux'
+      #   with:
+      #     root-reserve-mb: 30720
+      #     swap-size-mb: 1024
+      #     remove-android: "true"
+      #     remove-docker-images: "true"
+      #     remove-dotnet: "true"
 
       - uses: actions/checkout@v4
+
+      - name: Parse environment
+        id: parsed
+        uses: ./.github/actions/parse_environment
+        with:
+          os: ${{ matrix.os }}
+          compiler: ${{ matrix.compiler }}
 
       - name: Setup cache
         uses: ./.github/actions/setup_cache
         with:
-          compiler: ${{ matrix.compiler }}
-          build_type: ${{ matrix.build_type }}
-          developer_mode: ${{ matrix.developer_mode }}
+          key: ${{ steps.parsed.outputs.os_name }}-${{ steps.parsed.outputs.os_version }}-${{ steps.parsed.outputs.compiler_name }}-${{ steps.parsed.outputs.compiler_version }}-${{ matrix.build_type }}-${{ matrix.developer_mode }}
+          restore_key: ${{ steps.parsed.outputs.os_name }}-${{ steps.parsed.outputs.os_version }}-${{ steps.parsed.outputs.compiler_name }}-${{ steps.parsed.outputs.compiler_version }}-${{ matrix.build_type }}
 
       - name: Setup cpp
         uses: aminya/setup-cpp@v0.37.0
         with:
           compiler: ${{ matrix.compiler }}
-          vcvarsall: ${{ contains(matrix.os, 'windows') }}
+          vcvarsall: ${{ runner.os == 'Windows' }}
 
           cmake: true
           ninja: true
           ccache: true
           python: true
 
+          # llvm and clang-tidy version should match according to https://github.com/aminya/setup-cpp/issues/249
+          clangtidy: ${{ startsWith(matrix.compiler, 'llvm-') && steps.parsed.outputs.compiler_version || 'true' }}
           cppcheck: true
-          clangtidy: true
 
           gcovr: 7.2 # The default version 5.2 stucks on macos gcc
           opencppcoverage: true
@@ -120,14 +120,16 @@ jobs:
         uses: ./.github/actions/setup_conan
         id: conan
         with:
-          os: ${{ matrix.os }}
-          arch: x86_64
-          compiler: ${{ matrix.compiler }}
+          os_name: ${{ steps.parsed.outputs.os_name }}
+          os_version: ${{ steps.parsed.outputs.os_version }}
+          arch: ${{ steps.parsed.outputs.arch }}
+          compiler_name: ${{ steps.parsed.outputs.compiler_name }}
+          compiler_version: ${{ steps.parsed.outputs.compiler_version }}
           build_type: ${{ matrix.build_type }}
 
       - name: Configure cmake
         run: |
-          cmake --preset ${{ steps.conan.outputs.compiler_name }} ${{ steps.conan.outputs.compiler_name == 'msvc' && '-A x64 -T v143' || '' }} -D ENABLE_DEVELOPER_MODE:BOOL=${{ matrix.developer_mode }} -D OPT_ENABLE_COVERAGE:BOOL=${{ matrix.build_type == 'Debug' }}
+          cmake --preset ${{ steps.parsed.outputs.compiler_name }} ${{ steps.parsed.outputs.compiler_name == 'msvc' && '-A x64 -T v143' || '' }} -D ENABLE_DEVELOPER_MODE:BOOL=${{ matrix.developer_mode }} -D OPT_ENABLE_COVERAGE:BOOL=${{ matrix.build_type == 'Debug' }}
 
       - name: Build and test
         run: |
@@ -135,21 +137,21 @@ jobs:
 
       - name: Unix - Coverage
         if: runner.os != 'Windows'
-        working-directory: build/${{ steps.conan.outputs.compiler_name }}
+        working-directory: build/${{ steps.parsed.outputs.compiler_name }}
         run: |
           ctest -C ${{ matrix.build_type }}
-          gcovr -j ${{ env.nproc }} --delete --root ../../ --print-summary --xml-pretty --xml coverage.xml . --gcov-executable '${{ matrix.gcov_executable }}'
+          gcovr -j ${{ env.nproc }} --delete --root ../../ --print-summary --xml-pretty --xml coverage.xml . --gcov-executable '${{ steps.parsed.outputs.gcov_executable }}'
 
       - name: Windows - Coverage
         if: runner.os == 'Windows'
-        working-directory: build/${{ steps.conan.outputs.compiler_name }}
+        working-directory: build/${{ steps.parsed.outputs.compiler_name }}
         run: |
           OpenCppCoverage.exe --export_type cobertura:coverage.xml --cover_children -- ctest -C ${{ matrix.build_type }}
 
       - name: Publish to codecov
         uses: codecov/codecov-action@v4.4.0
         with:
-          files: ./build/${{ steps.conan.outputs.compiler_name }}/coverage.xml
+          files: ./build/${{ steps.parsed.outputs.compiler_name }}/coverage.xml
           flags: ${{ runner.os }}
           name: ${{ runner.os }}-coverage
           token: ${{ secrets.CODECOV_TOKEN }}
@@ -157,7 +159,7 @@ jobs:
 
       - name: CPack
         if: matrix.package_generator != ''
-        working-directory: build/${{ steps.conan.outputs.compiler_name }}
+        working-directory: build/${{ steps.parsed.outputs.compiler_name }}
         run: |
           cpack -C ${{ matrix.build_type }} -G ${{ matrix.package_generator }} -B _package -V
 
@@ -166,4 +168,4 @@ jobs:
         if: ${{ startsWith(github.ref, 'refs/tags/') && matrix.package_generator != '' }}
         with:
           files: |
-            build/${{ steps.conan.outputs.compiler_name }}/_package/*.*
+            build/${{ steps.parsed.outputs.compiler_name }}/_package/*.*

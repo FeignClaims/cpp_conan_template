@@ -1,15 +1,21 @@
 name: "setup_conan"
 description: "sets up conan"
 inputs:
-  os:
+  os_name:
     required: true
-    description: "Operating system"
+    description: "Operating system name"
+  os_version:
+    required: true
+    description: "Operating system version"
   arch:
     required: true
-    description: "Architecutre"
-  compiler:
+    description: "Architecture"
+  compiler_name:
     required: true
-    description: "Compiler"
+    description: "Compiler name"
+  compiler_version:
+    required: true
+    description: "Compiler version"
   build_type:
     required: true
     description: "Build type"
@@ -32,18 +38,6 @@ outputs:
   args:
     description: "The corresponding args that should be used in conan commands afterwards"
     value: ${{ steps.output.outputs.args }}
-  os_name:
-    description: "Operating system name (ubuntu converted to linux)"
-    value: ${{ steps.parse_os.outputs.name }}
-  os_version:
-    description: "Operating system version (if not set in inputs.os, set to latest)"
-    value: ${{ steps.parse_os.outputs.version }}
-  compiler_name:
-    description: "Compiler name (llvm converted to clang)"
-    value: ${{ steps.parse_compiler.outputs.name }}
-  compiler_version:
-    description: "Compiler version (if not set in inputs.compiler, set to latest)"
-    value: ${{ steps.parse_compiler.outputs.version }}
 
 runs:
   using: "composite"
@@ -58,44 +52,20 @@ runs:
       run: |
         conan profile detect
 
-    - name: Parse os and os version
-      id: parse_os
-      shell: bash
-      env:
-        VALUE: ${{ contains(matrix.os, '-') && matrix.os || format('{0}-{1}', matrix.os, 'latest') }}
-      run: |
-        export NAME=${VALUE%%-*}
-        echo name=${NAME/ubuntu/linux} >> "$GITHUB_OUTPUT"
-
-        export VERSION=${VALUE##*-}
-        echo version=$VERSION >> "$GITHUB_OUTPUT"
-
-    - name: Parse compiler and compiler version
-      id: parse_compiler
-      shell: bash
-      env:
-        VALUE: ${{ contains(matrix.compiler, '-') && matrix.compiler || format('{0}-{1}', matrix.compiler, 'latest') }}
-      run: |
-        export NAME=${VALUE%%-*}
-        echo name=${NAME/llvm/clang} >> "$GITHUB_OUTPUT"
-
-        export VERSION=${VALUE##*-}
-        echo version=$VERSION >> "$GITHUB_OUTPUT"
-
     - name: Output
       id: output
       shell: bash
       run: |
         echo "home=$(conan config home)" >> "$GITHUB_OUTPUT"
 
-        export HOST_PROFILE=$(python3 script/match_conan_profile.py "${{ steps.parse_os.outputs.name }}-${{ steps.parse_os.outputs.version }}-${{ inputs.arch }}-${{ steps.parse_compiler.outputs.name }}-${{ steps.parse_compiler.outputs.version }}-${{ inputs.build_type }}")
+        export HOST_PROFILE=$(python3 script/match_conan_profile.py "${{ inputs.os_name }}-${{ inputs.os_version }}-${{ inputs.arch }}-${{ inputs.compiler_name }}-${{ inputs.compiler_version }}-${{ inputs.build_type }}")
         echo "host_profile=$HOST_PROFILE" >> "$GITHUB_OUTPUT"
 
         export BUILD_PROFILE=default
         echo "build_profile=$BUILD_PROFILE" >> "$GITHUB_OUTPUT"
 
         export 
-        echo "args=-pr:b '$BUILD_PROFILE' -pr:h '$HOST_PROFILE' -s:h 'build_type=${{ inputs.build_type }}' ${{ inputs.args }}" >> "$GITHUB_OUTPUT"
+        echo "args=-pr:b '$BUILD_PROFILE' -s:b 'build_type=Release' -pr:h '$HOST_PROFILE' -s:h 'build_type=${{ inputs.build_type }}' ${{ inputs.args }}" >> "$GITHUB_OUTPUT"
 
     - name: Install conan config folder
       shell: bash

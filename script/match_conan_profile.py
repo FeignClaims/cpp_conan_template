@@ -2,9 +2,10 @@
 
 import os
 import sys
+import re
 
 
-def match_file(file, target_name):
+def match_sections(file_sections, target_sections):
     '''
     Check if target can be matched by the file.
     By "match", we mean the corresponding file section is equal to the specified target section, or is wildcard '#'.
@@ -12,7 +13,7 @@ def match_file(file, target_name):
     -> equal_count if matches, standing for sections that equals
     '''
     equal_count = 0
-    for file_section, target_section in zip(file.split('-'), target_name.split('-')):
+    for file_section, target_section in zip(file_sections.groups(), target_sections.groups()):
         if file_section == "#":
             continue
         elif file_section == target_section:
@@ -33,10 +34,19 @@ def find_most_matched_file(directory, target_name):
     most_matched = ""
     max_count = -1
 
+    REGEX = re.compile(
+        "([0-9a-zA-Z#_.]+)-([0-9a-zA-Z#_.]+)-([0-9a-zA-Z#_.]+)-([0-9a-zA-Z#_.]+)-([0-9a-zA-Z#_.]+)-([0-9a-zA-Z#_.]+)")
+
+    target_sections = REGEX.match(target_name)
+    if not target_sections:
+        raise Exception(
+            "input <conan_profile> dosen't match the pattern <os>-<os_version>-<architecture>-<compiler>-<compiler_version>-<build_type>")
+
     for file in os.listdir(directory):
         file_path = os.path.join(directory, file)
-        if os.path.isfile(file_path) and os.path.splitext(file_path)[1] == '':
-            count = match_file(file, target_name)
+        file_sections = REGEX.match(file)
+        if os.path.isfile(file_path) and file_sections:
+            count = match_sections(file_sections, target_sections)
             if count == -1:
                 continue
             elif count > max_count:
@@ -44,7 +54,7 @@ def find_most_matched_file(directory, target_name):
                 max_count = count
             elif count == max_count:
                 # If multiple files have the maximum count, choose the section-lexicographcially less one
-                if file.split('-') < most_matched.split('-'):
+                if file.groups() < most_matched.groups():
                     most_matched = file
 
     return most_matched

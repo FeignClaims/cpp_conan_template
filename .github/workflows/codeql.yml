@@ -45,24 +45,31 @@ jobs:
           - ON
 
     steps:
-      - name: Linux - Maximize build disk space
-        uses: easimon/maximize-build-space@v10
-        if: runner.os == 'Linux'
-        with:
-          root-reserve-mb: 30720
-          swap-size-mb: 1024
-          remove-android: "true"
-          remove-docker-images: "true"
-          remove-dotnet: "true"
+      # Use this if a fairly large library is requried, like building and using llvm as a library.
+      # - name: Linux - Maximize build disk space
+      #   uses: easimon/maximize-build-space@v10
+      #   if: runner.os == 'Linux'
+      #   with:
+      #     root-reserve-mb: 30720
+      #     swap-size-mb: 1024
+      #     remove-android: "true"
+      #     remove-docker-images: "true"
+      #     remove-dotnet: "true"
 
       - uses: actions/checkout@v4
+
+      - name: Parse environment
+        id: parsed
+        uses: ./.github/actions/parse_environment
+        with:
+          os: ${{ matrix.os }}
+          compiler: ${{ matrix.compiler }}
 
       - name: Setup cache
         uses: ./.github/actions/setup_cache
         with:
-          compiler: ${{ matrix.compiler }}
-          build_type: ${{ matrix.build_type }}
-          developer_mode: ${{ matrix.developer_mode }}
+          key: ${{ steps.parsed.outputs.os_name }}-${{ steps.parsed.outputs.os_version }}-${{ steps.parsed.outputs.compiler_name }}-${{ steps.parsed.outputs.compiler_version }}-${{ matrix.build_type }}-${{ matrix.developer_mode }}
+          restore_key: ${{ steps.parsed.outputs.os_name }}-${{ steps.parsed.outputs.os_version }}-${{ steps.parsed.outputs.compiler_name }}-${{ steps.parsed.outputs.compiler_version }}-${{ matrix.build_type }}
 
       - name: Setup Cpp
         uses: aminya/setup-cpp@v0.37.0
@@ -85,9 +92,11 @@ jobs:
         uses: ./.github/actions/setup_conan
         id: conan
         with:
-          os: ${{ matrix.os }}
-          arch: x86_64
-          compiler: ${{ matrix.compiler }}
+          os_name: ${{ steps.parsed.outputs.os_name }}
+          os_version: ${{ steps.parsed.outputs.os_version }}
+          arch: ${{ steps.parsed.outputs.arch }}
+          compiler_name: ${{ steps.parsed.outputs.compiler_name }}
+          compiler_version: ${{ steps.parsed.outputs.compiler_version }}
           build_type: ${{ matrix.build_type }}
           # Fix "ASan runtime does not come first in initial library list; you should either link runtime to your application or manually preload it with LD_PRELOAD."
           # Learnt from https://github.com/igraph/igraph/issues/1181
@@ -95,7 +104,7 @@ jobs:
 
       - name: Configure cmake
         run: |
-          cmake --preset ${{ steps.conan.outputs.compiler_name }} ${{ steps.conan.outputs.compiler_name == 'msvc' && '-A x64 -T v143' || '' }} -D ENABLE_DEVELOPER_MODE:BOOL=${{ matrix.developer_mode }} -D OPT_ENABLE_COVERAGE:BOOL=${{ matrix.build_type == 'Debug' }} -D OPT_ENABLE_CLANG_TIDY:BOOL=OFF -D OPT_ENABLE_CPPCHECK:BOOL=OFF -D OPT_ENABLE_INCLUDE_WHAT_YOU_USE:BOOL=OFF
+          cmake --preset ${{ steps.parsed.outputs.compiler_name }} ${{ steps.parsed.outputs.compiler_name == 'msvc' && '-A x64 -T v143' || '' }} -D ENABLE_DEVELOPER_MODE:BOOL=${{ matrix.developer_mode }} -D OPT_ENABLE_COVERAGE:BOOL=${{ matrix.build_type == 'Debug' }} -D OPT_ENABLE_CLANG_TIDY:BOOL=OFF -D OPT_ENABLE_CPPCHECK:BOOL=OFF -D OPT_ENABLE_INCLUDE_WHAT_YOU_USE:BOOL=OFF
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
