@@ -136,19 +136,20 @@ jobs:
           conan build . ${{ steps.conan.outputs.args }}
 
       - name: Unix - Coverage
-        if: runner.os != 'Windows'
+        if: runner.os != 'Windows' && matrix.build_type == 'Debug'
         working-directory: build/${{ steps.parsed.outputs.compiler_name }}
         run: |
           ctest -C ${{ matrix.build_type }}
           gcovr -j ${{ env.nproc }} --delete --root ../../ --print-summary --xml-pretty --xml coverage.xml . --gcov-executable '${{ steps.parsed.outputs.gcov_executable }}'
 
       - name: Windows - Coverage
-        if: runner.os == 'Windows'
+        if: runner.os == 'Windows' && matrix.build_type == 'Debug'
         working-directory: build/${{ steps.parsed.outputs.compiler_name }}
         run: |
           OpenCppCoverage.exe --export_type cobertura:coverage.xml --cover_children -- ctest -C ${{ matrix.build_type }}
 
       - name: Publish to codecov
+        if: matrix.build_type == 'Debug'
         uses: codecov/codecov-action@v4.4.0
         with:
           files: ./build/${{ steps.parsed.outputs.compiler_name }}/coverage.xml
