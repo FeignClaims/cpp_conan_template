@@ -120,7 +120,7 @@ jobs:
         uses: ./.github/actions/setup_conan
         id: conan
         with:
-          host_profile: ${{ steps.parsed.outputs.os_name }}-${{ steps.parsed.outputs.os_version }}-${{ steps.parsed.outputs.compiler_name }}- ${{ steps.parsed.outputs.compiler_version }}-${{ matrix.build_type }}
+          host_profile: ${{ steps.parsed.outputs.os_name }}-${{ steps.parsed.outputs.os_version }}-${{ steps.parsed.outputs.compiler_name }}-${{ steps.parsed.outputs.compiler_version }}-${{ matrix.build_type }}
 
       - name: Configure cmake
         run: |
