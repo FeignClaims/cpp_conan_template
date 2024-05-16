@@ -1,0 +1,4 @@
+[conf]
+&:tools.cmake.cmaketoolchain:generator=Ninja Multi-Config
+tools.system.package_manager:mode=install
+tools.system.package_manager:sudo=True

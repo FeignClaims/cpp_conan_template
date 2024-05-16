@@ -1,17 +1,16 @@
-{% set compiler, version, _ = detect_api.detect_msvc_compiler() %}
+include(_common)
+
+{% set compiler, version, compiler_exe = detect_api.detect_cl_compiler() %}
 {% set runtime, _ = detect_api.default_msvc_runtime(compiler) %}
-{% set arch = detect_api.detect_arch() %}
-{% set os = detect_api.detect_os() %}
 
 [settings]
-arch={{ arch }}
+os={{ detect_api.detect_os() }}
+arch={{ detect_api.detect_arch() }}
 compiler={{ compiler }}
 compiler.cppstd=20
 compiler.runtime={{ runtime }}
 compiler.version={{ version }}
-os={{ os }}
 
 [conf]
+tools.build:compiler_executables={'c': '{{ compiler_exe }}', 'cpp': '{{ compiler_exe | replace('gcc', 'g++') | replace('clang', 'clang++') }}'}
 &:tools.cmake.cmaketoolchain:generator=Visual Studio 17 2022
-tools.system.package_manager:mode=install
-tools.system.package_manager:sudo=True
