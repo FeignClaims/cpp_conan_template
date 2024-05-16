@@ -38,6 +38,9 @@ def find_most_matched_file(directory, target_name):
         "([0-9a-zA-Z#_.]+)-([0-9a-zA-Z#_.]+)-([0-9a-zA-Z#_.]+)-([0-9a-zA-Z#_.]+)-([0-9a-zA-Z#_.]+)-([0-9a-zA-Z#_.]+)")
 
     target_sections = REGEX.match(target_name)
+    if not target_sections:
+        raise Exception(
+            "input <conan_profile> dosen't match the pattern <os>-<os_version>-<architecture>-<compiler>-<compiler_version>-<build_type>")
 
     for file in os.listdir(directory):
         file_path = os.path.join(directory, file)
