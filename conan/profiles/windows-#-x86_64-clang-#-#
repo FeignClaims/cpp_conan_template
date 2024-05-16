@@ -2,7 +2,7 @@
 include(_commom)
 
 # The specialization sets libcxx to libc++ directly, since it can't be detected
-{% set compiler, version, compiler_exe = detect_api.detect_gcc_compiler("gcc-13") %}
+{% set compiler, version, compiler_exe = detect_api.detect_clang_compiler() %}
 
 [settings]
 arch=x86_64
