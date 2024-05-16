@@ -1,9 +1,24 @@
 name: "setup_conan"
 description: "sets up conan"
 inputs:
-  host_profile:
+  os_name:
     required: true
-    description: "Host conan profile name to be matched"
+    description: "Operating system name"
+  os_version:
+    required: true
+    description: "Operating system version"
+  arch:
+    required: true
+    description: "Architecture"
+  compiler_name:
+    required: true
+    description: "Compiler name"
+  compiler_version:
+    required: true
+    description: "Compiler version"
+  build_type:
+    required: true
+    description: "Build type"
   args:
     description: "Additional conan args"
     default: ""
@@ -43,7 +58,7 @@ runs:
       run: |
         echo "home=$(conan config home)" >> "$GITHUB_OUTPUT"
 
-        export HOST_PROFILE=$(python3 script/match_conan_profile.py "${{ inputs.host_profile }}")
+        export HOST_PROFILE=$(python3 script/match_conan_profile.py "${{ inputs.os_name }}-${{ inputs.os_version }}-${{ inputs.arch }}-${{ inputs.compiler_name }}-${{ inputs.compiler_version }}-${{ inputs.build_type }}")
         echo "host_profile=$HOST_PROFILE" >> "$GITHUB_OUTPUT"
 
         export BUILD_PROFILE=default
