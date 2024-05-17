@@ -34,7 +34,7 @@ runs:
       id: os
       shell: bash
       env:
-        VALUE: ${{ contains(matrix.os, '-') && matrix.os || format('{0}-{1}', matrix.os, 'latest') }}
+        VALUE: ${{ contains(inputs.os, '-') && inputs.os || format('{0}-{1}', inputs.os, 'latest') }}
       run: |
         export NAME=${VALUE%%-*}
         echo name=${NAME/ubuntu/linux} >> "$GITHUB_OUTPUT"
@@ -52,7 +52,7 @@ runs:
       id: compiler
       shell: bash
       env:
-        VALUE: ${{ contains(matrix.compiler, '-') && matrix.compiler || format('{0}-{1}', matrix.compiler, 'latest') }}
+        VALUE: ${{ contains(inputs.compiler, '-') && inputs.compiler || format('{0}-{1}', inputs.compiler, 'latest') }}
       run: |
         export NAME=${VALUE%%-*}
         echo name=$NAME >> "$GITHUB_OUTPUT"
