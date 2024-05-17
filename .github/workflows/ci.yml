@@ -34,9 +34,9 @@ jobs:
           - macos-12
           - windows-2022
         compiler:
-          # you can specify the version after `-` like "llvm-13.0.0".
-          - llvm
-          - llvm-16.0.6
+          # you can specify the version after `-` like "clang-13.0.0".
+          - clang
+          - clang-16.0.6
           - gcc-13
           - msvc
         build_type:
@@ -55,7 +55,7 @@ jobs:
 
           # FIXME: Until aminya/setup-cpp supports macos arm64
           - os: macos-12
-            compiler: llvm-16.0.6
+            compiler: clang-16.0.6
 
           # FIXME: Solve annotated_string mismatch in Windows to enable developer mode totally
           - os: windows-2022
@@ -109,8 +109,8 @@ jobs:
           ccache: true
           python: true
 
-          # llvm and clang-tidy version should match according to https://github.com/aminya/setup-cpp/issues/249
-          clangtidy: ${{ startsWith(matrix.compiler, 'llvm-') && steps.parsed.outputs.compiler_version || 'true' }}
+          # clang and clang-tidy version should match according to https://github.com/aminya/setup-cpp/issues/249
+          clangtidy: ${{ startsWith(matrix.compiler, 'clang-') && steps.parsed.outputs.compiler_version || 'true' }}
           cppcheck: true
 
           gcovr: 7.2 # The default version 5.2 stucks on macos gcc

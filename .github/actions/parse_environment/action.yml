@@ -18,7 +18,7 @@ outputs:
     description: "Architecture"
     value: ${{ steps.arch.outputs.value }}
   compiler_name:
-    description: "Compiler name (llvm converted to clang)"
+    description: "Compiler name"
     value: ${{ steps.compiler.outputs.name }}
   compiler_version:
     description: "Compiler version (if not set in inputs.compiler, set to latest)"
@@ -55,7 +55,7 @@ runs:
         VALUE: ${{ contains(matrix.compiler, '-') && matrix.compiler || format('{0}-{1}', matrix.compiler, 'latest') }}
       run: |
         export NAME=${VALUE%%-*}
-        echo name=${NAME/llvm/clang} >> "$GITHUB_OUTPUT"
+        echo name=$NAME >> "$GITHUB_OUTPUT"
 
         export VERSION=${VALUE##*-}
         echo version=$VERSION >> "$GITHUB_OUTPUT"
@@ -64,4 +64,4 @@ runs:
       id: gcov
       shell: bash
       run: |
-        echo "value=${{ contains(matrix.compiler, 'llvm') && 'llvm-cov gcov' || contains(matrix.compiler, 'gcc') && format('{0}-{1}', 'gcov', steps.compiler.outputs.version) || '' }}" >> "$GITHUB_OUTPUT"
+        echo "value=${{ contains(inputs.compiler, 'clang') && 'llvm-cov gcov' || contains(inputs.compiler, 'gcc') && format('{0}-{1}', 'gcov', steps.compiler.outputs.version) || '' }}" >> "$GITHUB_OUTPUT"
