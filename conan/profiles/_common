@@ -1,3 +1,7 @@
+[settings]
+os={{ detect_api.detect_os() }}
+arch={{ detect_api.detect_arch() }}
+
 [conf]
 &:tools.cmake.cmaketoolchain:generator=Ninja Multi-Config
 tools.system.package_manager:mode=install

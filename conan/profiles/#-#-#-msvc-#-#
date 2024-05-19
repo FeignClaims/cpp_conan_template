@@ -4,8 +4,6 @@ include(_common)
 {% set runtime, _ = detect_api.default_msvc_runtime(compiler) %}
 
 [settings]
-os={{ detect_api.detect_os() }}
-arch={{ detect_api.detect_arch() }}
 compiler={{ compiler }}
 compiler.cppstd=20
 compiler.runtime={{ runtime }}
