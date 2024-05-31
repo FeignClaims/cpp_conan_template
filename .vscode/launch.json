@@ -17,6 +17,18 @@
       }
     },
     {
+      "name": "LLDB: debug ctest",
+      "type": "lldb",
+      "request": "launch",
+      "program": "${command:cmake.testProgram}",
+      "args": ["${cmake.testArgs}"],
+      "cwd": "${command:cmake.testWorkingDirectory}",
+      "env": {
+        "name": "PATH",
+        "value": "${env:PATH}:${command:cmake.getLaunchTargetDirectory}"
+      }
+    },
+    {
       "name": "CMake: debug configuration",
       "type": "cmake",
       "request": "launch",
