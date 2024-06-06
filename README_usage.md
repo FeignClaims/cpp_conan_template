@@ -81,53 +81,71 @@ conan profile detect --force
 
 However, it is highly recommended to write a conan profile manually instead of depending on the detected one. In the profile, you can set information like the operating system, compiler or build configuration.
 
-For example, the following is my gcc profile on MacOS m1:
+For example, the following is my clang and gcc profile on MacOS m1:
 
 <details>
 <summary><code>_common</code> for common profile settings</summary>
 
 ```txt
+[settings]
+arch={{ detect_api.detect_arch() }}
+os={{ detect_api.detect_os() }}
+build_type=Release
+benchmark/*:build_type=Release
+boost/*:compiler.cppstd=20
+
 [platform_tool_requires]
-autoconf/2.71
-automake/1.16.5
-cmake/3.27.6
-ninja/1.11.1
+cmake/3.29.3
+ninja/1.12.1
 
 [conf]
-# &: influence current package (your project)
-&:tools.cmake.cmaketoolchain:generator=Ninja Multi-Config
-
-# qt/*: influence required qt
-qt/*:tools.cmake.cmaketoolchain:generator=Ninja
-
-# *: influence both current package and all depedencies
-*: tools.build:compiler_executables={"c": "/opt/homebrew/opt/llvm/bin/clang", "cpp": "/opt/homebrew/opt/llvm/bin/clang++"}
-
-# no specifier: same as *
-tools.build:compiler_executables={"c": "/opt/homebrew/opt/llvm/bin/clang", "cpp": "/opt/homebrew/opt/llvm/bin/clang++"}
-
+# &: influence only the current package but not any depedencies
 # see more in https://docs.conan.io/2/reference/config_files/profiles.html#profile-patterns
+&:tools.cmake.cmaketoolchain:generator=Ninja Multi-Config
 ```
 
 </details>
 
 <details>
-<summary><code>gcc</code> for common profile settings</summary>
+<summary><code>clang</code> profile</summary>
 
 ```txt
 include(_common)
 
+{% set compiler, version, compiler_exe = detect_api.detect_clang_compiler("clang") %}
+
 [settings]
-arch=armv8
-build_type=Release
-compiler=gcc
-compiler.cppstd=23
-compiler.libcxx=libstdc++11
-compiler.version=13
-os=Macos
+compiler={{ compiler }}
+compiler.cppstd=26
+compiler.libcxx={{ detect_api.detect_libcxx(compiler, version, compiler_exe) }}
+compiler.version={{ detect_api.default_compiler_version(compiler, version) }}
 
 [conf]
-tools.build:compiler_executables = {"c": "/opt/homebrew/bin/gcc-13", "cpp": "/opt/homebrew/bin/g++-13"}
+tools.build:compiler_executables = {"c": "{{ compiler_exe }}", "cpp": "{{ compiler_exe | replace("clang", "clang++") }}"}
+tools.build:cflags=['-L/opt/homebrew/opt/llvm/lib/c++', '-Wno-unused-command-line-argument']
+tools.build:cxxflags=['-L/opt/homebrew/opt/llvm/lib/c++', '-Wno-unused-command-line-argument']
+```
+
+</details>
+
+<details>
+<summary><code>gcc</code> profile</summary>
+
+```txt
+include(_common)
+
+{% set compiler, version, compiler_exe = detect_api.detect_gcc_compiler("gcc-14") %}
+
+[settings]
+compiler={{ compiler }}
+compiler.cppstd=23
+compiler.libcxx={{ detect_api.detect_libcxx(compiler, version, compiler_exe) }}
+compiler.version={{ detect_api.default_compiler_version(compiler, version) }}
+
+scnlib/*:compiler.cppstd=20
+
+[conf]
+tools.build:compiler_executables = {"c": "{{ compiler_exe }}", "cpp": "{{ compiler_exe | replace("gcc", "g++") }}"}
 ```
 
 </details>
