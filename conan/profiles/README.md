@@ -24,7 +24,7 @@ For example, with conan profiles:
 - `#-#-#-clang-#-#-#`;
 - `#-#-#-gcc-#-#-#`;
 - `#-#-#-msvc-#-#-#`;
-- `macos-#-#-gcc-13-#-#`;
+- `macos-#-#-gcc-14-#-#`;
 - `windows-#-#-clang-#-#-#`;
 - `windows-#-#-clang-#-Debug-#`.
 - `windows-#-#-clang-17-#-#`.
@@ -35,7 +35,7 @@ The jobs should match as the following:
 | job                                | matched conan profile            |
 | ---------------------------------- | -------------------------------- |
 | `macos-12-clang-latest-Debug-ON`   | `#-#-#-clang-#-#-#`              |
-| `macos-12-gcc-13-Debug-ON`         | `macos-#-#-gcc-#-#-#`            |
+| `macos-12-gcc-14-Debug-ON`         | `macos-#-#-gcc-#-#-#`            |
 | `windows-2022-clang-16-Debug-ON`   | `windows-#-#-clang-#-#-#`        |
 | `windows-2022-clang-17-Debug-ON`   | `windows-#-#-clang-#-Debug-#`    |
 | `windows-2022-clang-17-Release-ON` | `windows-#-#-clang-17-Release-#` |

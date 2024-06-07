@@ -1,9 +1,9 @@
 # An example on how to specialize a conan profile for the corresponding github action job
 include(_common)
 
-# The specialization sets `detect_api.detect_gcc_compiler("gcc-13")` to search the gcc compiler since macos aliases
+# The specialization sets `detect_api.detect_gcc_compiler("gcc-14")` to search the gcc compiler since macos aliases
 #   clang as "gcc"
-{% set compiler, version, compiler_exe = detect_api.detect_gcc_compiler("gcc-13") %}
+{% set compiler, version, compiler_exe = detect_api.detect_gcc_compiler("gcc-14") %}
 
 [settings]
 os=Macos
