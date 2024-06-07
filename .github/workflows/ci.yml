@@ -53,6 +53,10 @@ jobs:
           - os: macos-12
             compiler: msvc
 
+          # FIXME: Util the sdk support is propagated to the runners, see https://github.com/actions/runner-images/issues/9997
+          - os: macos-12
+            compiler: gcc-13
+
           # FIXME: Until aminya/setup-cpp supports macos arm64
           - os: macos-12
             compiler: clang-16.0.6
