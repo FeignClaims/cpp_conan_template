@@ -65,7 +65,7 @@ runs:
         echo "build_profile=$BUILD_PROFILE" >> "$GITHUB_OUTPUT"
 
         export 
-        echo "args=-pr:b '$BUILD_PROFILE' -s:b 'build_type=Release' -pr:h '$HOST_PROFILE' -s:h 'build_type=${{ inputs.build_type }}' ${{ inputs.args }}" >> "$GITHUB_OUTPUT"
+        echo "args=-pr:b _common -pr:b '$BUILD_PROFILE' -s:b 'build_type=Release' -pr:h '$HOST_PROFILE' -s:h 'build_type=${{ inputs.build_type }}' ${{ inputs.args }}" >> "$GITHUB_OUTPUT"
 
     - name: Install conan config folder
       shell: bash
