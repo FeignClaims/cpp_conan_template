@@ -38,7 +38,7 @@ jobs:
         os:
           - ubuntu-22.04
         compiler:
-          - gcc-14
+          - gcc-13
         build_type:
           - Debug
         developer_mode:

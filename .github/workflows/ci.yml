@@ -37,7 +37,7 @@ jobs:
           # you can specify the version after `-` like "clang-13.0.0".
           - clang
           - clang-16.0.6
-          - gcc-14
+          - gcc-13
           - msvc
         build_type:
           - Debug
@@ -65,7 +65,7 @@ jobs:
             compiler: msvc
             developer_mode: ON
           - os: windows-2022
-            compiler: gcc-14
+            compiler: gcc-13
             developer_mode: ON
 
         include:
