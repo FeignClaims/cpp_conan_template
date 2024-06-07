@@ -56,6 +56,9 @@ jobs:
           # FIXME: Until aminya/setup-cpp supports macos arm64
           - os: macos-12
             compiler: clang-16.0.6
+          # Latest Visual Studio runtime requires clang 17+
+          - os: windows-2022
+            compiler: clang-16.0.6
 
           # FIXME: Solve annotated_string mismatch in Windows to enable developer mode totally
           - os: windows-2022
