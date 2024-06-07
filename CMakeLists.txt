@@ -11,6 +11,9 @@ project(sample_project VERSION 1.0.0 LANGUAGES CXX)
 # - `sample_project_project_options` and `sample_project_project_warnings` interface libraries that contain C++ options
 include(sample_project_custom_project_options)
 
+# Install runtime dependencies propagated by conan
+include(install_conan_runtime_libs)
+
 # workaround: RPATH stuff
 # !!!NOT RECOMMENDED!!! see https://github.com/ossf/wg-best-practices-os-developers/blob/main/docs/Compiler-Hardening-Guides/Compiler-Options-Hardening-Guide-for-C-and-C%2B%2B.md
 include(rpath)
