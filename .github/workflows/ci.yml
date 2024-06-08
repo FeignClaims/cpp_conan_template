@@ -136,7 +136,7 @@ jobs:
       - name: Configure, build and test
         shell: bash
         run: |
-          conan build . ${{ steps.conan.outputs.args }} \
+          conan build . ${{ steps.conan.outputs.args }} -b missing \
             -c "tools.cmake.cmaketoolchain:extra_variables*={'ENABLE_DEVELOPER_MODE': {'value': '${{ matrix.developer_mode }}',        'cache': True, 'type': 'BOOL', 'docstring': 'Set up defaults for a developer of the project, and let developer change options'}}" \
             -c "tools.cmake.cmaketoolchain:extra_variables*={'OPT_ENABLE_COVERAGE'  : {'value': '${{ matrix.build_type == 'Debug' }}', 'cache': True, 'type': 'BOOL', 'docstring': 'Analyze and report on coverage'}}"
 
