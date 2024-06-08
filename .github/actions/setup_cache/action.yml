@@ -4,8 +4,6 @@ inputs:
   key:
     required: true
     description: "Cache key"
-  restore_key:
-    description: "Restore key when cache misses"
 
 runs:
   using: "composite"
@@ -16,14 +14,14 @@ runs:
         path: |
           ~/.cache/pip
           ~/.ccache
-        key: ${{ inputs.key }}-${{ hashFiles('**/CMakeLists.txt') }}
+        key: ${{ inputs.key }}-${{ hashFiles('**/CMakeLists.txt') }}-${{ github.run_id }}
         restore-keys: |
-          ${{ inputs.restore_key != '' && inputs.restore_key || inputs.key }}
+          ${{ inputs.key }}-${{ hashFiles('**/CMakeLists.txt') }}
 
     - name: Cache conan
       uses: actions/cache@v4.0.2
       with:
         path: ~/.conan2/p
-        key: ${{ inputs.key }}-${{ hashFiles('conanfile.py', 'conanfile.txt') }}
+        key: ${{ inputs.key }}-${{ hashFiles('conanfile.py', 'conanfile.txt') }}-${{ github.run_id }}
         restore-keys: |
-          ${{ inputs.restore_key != '' && inputs.restore_key || inputs.key }}
+          ${{ inputs.key }}-${{ hashFiles('conanfile.py', 'conanfile.txt') }}

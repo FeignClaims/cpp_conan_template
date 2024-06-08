@@ -103,7 +103,6 @@ jobs:
         uses: ./.github/actions/setup_cache
         with:
           key: ${{ steps.parsed.outputs.os_name }}-${{ steps.parsed.outputs.os_version }}-${{ steps.parsed.outputs.compiler_name }}-${{ steps.parsed.outputs.compiler_version }}-${{ matrix.build_type }}-${{ matrix.developer_mode }}
-          restore_key: ${{ steps.parsed.outputs.os_name }}-${{ steps.parsed.outputs.os_version }}-${{ steps.parsed.outputs.compiler_name }}-${{ steps.parsed.outputs.compiler_version }}-${{ matrix.build_type }}
 
       - name: Setup cpp
         uses: aminya/setup-cpp@v0.37.0
