@@ -110,8 +110,10 @@ jobs:
         shell: bash
         run: |
           conan build . ${{ steps.conan.outputs.args }} \
-            -c "tools.cmake.cmaketoolchain:extra_variables*={'ENABLE_DEVELOPER_MODE': {'value': '${{ matrix.developer_mode }}',        'cache': True, 'type': 'BOOL', 'docstring': 'Set up defaults for a developer of the project, and let developer change options'}}" \
-            -c "tools.cmake.cmaketoolchain:extra_variables*={'OPT_ENABLE_COVERAGE'  : {'value': '${{ matrix.build_type == 'Debug' }}', 'cache': True, 'type': 'BOOL', 'docstring': 'Analyze and report on coverage'}}"
+            -c "tools.cmake.cmaketoolchain:extra_variables*={'ENABLE_DEVELOPER_MODE'          : {'value': '${{ matrix.developer_mode }}',        'cache': True, 'type': 'BOOL', 'docstring': 'Set up defaults for a developer of the project, and let developer change options'}}" \
+            -c "tools.cmake.cmaketoolchain:extra_variables*={'OPT_ENABLE_CLANG_TIDY'          : {'value': 'OFF',                                 'cache': True, 'type': 'BOOL', 'docstring': 'Enable clang-tidy analysis during compilation'}}" \
+            -c "tools.cmake.cmaketoolchain:extra_variables*={'OPT_ENABLE_CPPCHECK'            : {'value': 'OFF',                                 'cache': True, 'type': 'BOOL', 'docstring': 'Enable cppcheck analysis during compilation'}}" \
+            -c "tools.cmake.cmaketoolchain:extra_variables*={'OPT_ENABLE_INCLUDE_WHAT_YOU_USE': {'value': 'OFF',                                 'cache': True, 'type': 'BOOL', 'docstring': 'Enable include-what-you-use analysis during compilation'}}"
 
       - name: Build and test
         run: |
