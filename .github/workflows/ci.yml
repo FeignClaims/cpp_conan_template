@@ -133,13 +133,11 @@ jobs:
           compiler_version: ${{ steps.parsed.outputs.compiler_version }}
           build_type: ${{ matrix.build_type }}
 
-      - name: Configure cmake
+      - name: Configure, build and test
         run: |
-          cmake --preset ${{ steps.parsed.outputs.compiler_name }} ${{ steps.parsed.outputs.compiler_name == 'msvc' && '-A x64 -T v143' || '' }} -D ENABLE_DEVELOPER_MODE:BOOL=${{ matrix.developer_mode }} -D OPT_ENABLE_COVERAGE:BOOL=${{ matrix.build_type == 'Debug' }}
-
-      - name: Build and test
-        run: |
-          conan build . ${{ steps.conan.outputs.args }}
+          conan build . ${{ steps.conan.outputs.args }} \
+            -c "tools.cmake.cmaketoolchain:extra_variables*={'ENABLE_DEVELOPER_MODE': {'value': '${{ matrix.developer_mode }}',        'cache': True, 'type': 'BOOL', 'docstring': 'Set up defaults for a developer of the project, and let developer change options'}}" \
+            -c "tools.cmake.cmaketoolchain:extra_variables*={'OPT_ENABLE_COVERAGE'  : {'value': '${{ matrix.build_type == 'Debug' }}', 'cache': True, 'type': 'BOOL', 'docstring': 'Analyze and report on coverage'}}"
 
       - name: Unix - Coverage
         if: runner.os != 'Windows' && matrix.build_type == 'Debug'
