@@ -3,9 +3,7 @@ on:
   pull_request:
   push:
     tags: "*"
-    branches:
-      - main
-      - develop
+    branches: "*"
   workflow_dispatch:
 
 jobs:

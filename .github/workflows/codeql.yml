@@ -15,9 +15,7 @@ on:
   pull_request:
   push:
     tags: "*"
-    branches:
-      - main
-      - develop
+    branches: "*"
   schedule:
     - cron: "38 0 * * 5"
   workflow_dispatch:
