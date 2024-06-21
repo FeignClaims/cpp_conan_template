@@ -4,7 +4,7 @@
 [![codecov](https://codecov.io/gh/FeignClaims/cpp_conan_template/graph/badge.svg?token=BQEOMHO4P6)](https://codecov.io/gh/FeignClaims/cpp_conan_template)
 [![CodeQL](https://github.com/FeignClaims/cpp_conan_template/actions/workflows/codeql.yml/badge.svg)](https://github.com/FeignClaims/cpp_conan_template/actions/workflows/codeql.yml)
 
-> Write your own conan profile and conanfile, then cmake using the generated toochians.
+> Write your own conan profile and conanfile, then use cmake with the generated toochians.
 
 :warning: support for docker images dose NOT complete yet!
 
