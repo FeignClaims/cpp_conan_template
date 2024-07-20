@@ -13,6 +13,7 @@ macro(fetch_project_options git_repository git_tag)
     GIT_REPOSITORY ${git_repository}
     GIT_TAG ${git_tag}
     GIT_SHALLOW true
+    GIT_SUBMODULES ""
   )
   FetchContent_MakeAvailable(_sample_project_project_options)
   include(${_sample_project_project_options_SOURCE_DIR}/src/DynamicProjectOptions.cmake)
