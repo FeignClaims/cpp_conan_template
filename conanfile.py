@@ -42,7 +42,7 @@ class sample_project_recipe(ConanFile):
         cmake_layout(self)
 
     def requirements(self):
-        self.requires("fmt/11.0.1")
+        self.requires("fmt/11.0.2")
         self.requires("ms-gsl/4.0.0")
         self.requires("range-v3/0.12.0")
 
