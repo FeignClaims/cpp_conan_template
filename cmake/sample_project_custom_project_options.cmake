@@ -24,7 +24,7 @@ else()
 endif()
 
 # optimization
-if (NOT (LINUX AND CMAKE_CXX_COMPILER_ID STREQUAL "GNU"))
+if (NOT (LINUX AND CMAKE_CXX_COMPILER_ID STREQUAL "GNU")) # Disable linux gcc until https://gitlab.kitware.com/cmake/cmake/-/issues/23136
   set(ENABLE_INTERPROCEDURAL_OPTIMIZATION_DEFAULT ON)
 endif()
 set(ENABLE_NATIVE_OPTIMIZATION_DEFAULT ON)
