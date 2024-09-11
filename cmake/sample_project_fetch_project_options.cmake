@@ -21,4 +21,4 @@ macro(fetch_project_options git_repository git_tag)
   include(${_sample_project_project_options_SOURCE_DIR}/src/DynamicProjectOptions.cmake)
 endmacro()
 
-fetch_project_options(https://github.com/aminya/project_options.git v0.36.1)
+fetch_project_options(https://github.com/aminya/project_options.git v0.36.4)
