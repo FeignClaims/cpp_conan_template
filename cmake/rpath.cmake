@@ -1,4 +1,4 @@
-# - A workaround to correctly resolve installed dylib dependencies on MacOS for now
+# - A workaround to correctly resolve installed runtime dependencies on unix for now
 # Include this module in the main CMakeLists.txt before adding targets to make use
 include_guard()
 
