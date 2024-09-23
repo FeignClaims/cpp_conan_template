@@ -4,39 +4,39 @@
 # The below config function will generate a test config target that can be used by linking it.
 #
 #   add_test_config(<config_name>  # target will be named as `test_config.${config_name}`
-#     [SOURCES <arg1...>]
-#     [INCLUDES <arg1...>]
-#     [SYSTEM_INCLUDES <arg1...>]
-#     [DEPENDENCIES_CONFIG <arg1...>]
-#     [DEPENDENCIES <arg1...>]
-#     [LIBRARIES <arg1...>]
-#     [SYSTEM_LIBRARIES <arg1...>]
-#     [COMPILE_DEFINITIONS <arg1...>]
-#     [COMPILE_OPTIONS <arg1...>]
-#     [COMPILE_FEATURES <arg1...>]
-#     [EXECUTE_ARGS <arg1...>]
+#     [SOURCES [arg1...]]
+#     [INCLUDES [arg1...]]
+#     [SYSTEM_INCLUDES [arg1...]]
+#     [DEPENDENCIES_CONFIG [arg1...]]
+#     [DEPENDENCIES [arg1...]]
+#     [LIBRARIES [arg1...]]
+#     [SYSTEM_LIBRARIES [arg1...]]
+#     [COMPILE_DEFINITIONS [arg1...]]
+#     [COMPILE_OPTIONS [arg1...]]
+#     [COMPILE_FEATURES [arg1...]]
+#     [EXECUTE_ARGS [arg1...]]
 #   )
 #
 # The below add_test wrappers will generate a test target and register it in CTest.
 #
 #   add_library_test(<library> <test_name>
-#     [CONFIGS <arg1...>]  # accepts both `${config_name}` and `test_config.${config_name}`
-#     [SOURCES <arg1...>]
-#     [INCLUDES <arg1...>]
-#     [SYSTEM_INCLUDES <arg1...>]
-#     [DEPENDENCIES_CONFIG <arg1...>]
-#     [DEPENDENCIES <arg1...>]
-#     [LIBRARIES <arg1...>]
-#     [SYSTEM_LIBRARIES <arg1...>]
-#     [COMPILE_DEFINITIONS <arg1...>]
-#     [COMPILE_OPTIONS <arg1...>]
-#     [COMPILE_FEATURES <arg1...>]
-#     [EXECUTE_ARGS <arg1...>]
+#     [CONFIGS [arg1...]]  # accepts both `${config_name}` and `test_config.${config_name}`
+#     [SOURCES [arg1...]]
+#     [INCLUDES [arg1...]]
+#     [SYSTEM_INCLUDES [arg1...]]
+#     [DEPENDENCIES_CONFIG [arg1...]]
+#     [DEPENDENCIES [arg1...]]
+#     [LIBRARIES [arg1...]]
+#     [SYSTEM_LIBRARIES [arg1...]]
+#     [COMPILE_DEFINITIONS [arg1...]]
+#     [COMPILE_OPTIONS [arg1...]]
+#     [COMPILE_FEATURES [arg1...]]
+#     [EXECUTE_ARGS [arg1...]]
 #   )
 #
 #   add_executable_test(<executable> <test_name>
-#     [CONFIGS <arg1...>]  # accepts both `${config_name}` and `test_config.${config_name}`
-#     [EXECUTE_ARGS <arg1...>]
+#     [CONFIGS [arg1...]]  # accepts both `${config_name}` and `test_config.${config_name}`
+#     [EXECUTE_ARGS [arg1...]]
 #   )
 
 include_guard()
