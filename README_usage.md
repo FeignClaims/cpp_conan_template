@@ -37,13 +37,15 @@ python3 script/rename.py sample_lib <new_lib_name>
 
 ## Configure option 1: only use cmake
 
-Edit `CMakeLists.txt`, add a line `run_conan()` between `include(fetch_project_options)` and `project(cpp_novice LANGUAGES CXX)`. That is:
+Edit `CMakeLists.txt`, add a line `run_conan()` between `include(sample_project_fetch_project_options)` and `project(cpp_novice LANGUAGES CXX)`. That is:
 
 ```cmake
 cmake_minimum_required(VERSION 3.25)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
-include(fetch_project_options)
+include(fix_msvc)
+include(sample_project_options)
+include(sample_project_fetch_project_options)
 
 run_conan()
 project(sample_project VERSION 0.0.1 LANGUAGES CXX)
