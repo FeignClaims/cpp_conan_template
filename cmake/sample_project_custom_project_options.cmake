@@ -1,7 +1,7 @@
 # - Customization point for project_options: https://github.com/aminya/project_options
 # This module customizes and runs `dynamic_project_options(...)`.
 #
-# Note that this module should be included this module after `project(...)`.
+# Note that this module should be included after `project(...)`.
 include_guard()
 
 if(NOT _sample_project_project_options_POPULATED)
