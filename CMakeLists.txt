@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.25)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+include(fix_msvc)
 include(sample_project_options)
 include(sample_project_fetch_project_options)
 
