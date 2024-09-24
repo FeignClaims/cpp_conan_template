@@ -18,6 +18,7 @@ BreakAdjacentStringLiterals: true
 BreakAfterAttributes: Leave
 BreakBeforeBinaryOperators: All
 BreakBeforeInlineASMColon: OnlyMultiline
+BreakTemplateDeclarations: Yes
 BinPackArguments: false
 BinPackParameters: false
 ColumnLimit: 120
@@ -44,6 +45,10 @@ IntegerLiteralSeparator:
 IndentRequiresClause: true
 IndentPPDirectives: AfterHash
 InsertNewlineAtEOF: false
+KeepEmptyLines:
+  AtEndOfFile: false
+  AtStartOfBlock: false
+  AtStartOfFile: false
 LineEnding: LF
 NamespaceIndentation: Inner
 PackConstructorInitializers: NextLine
