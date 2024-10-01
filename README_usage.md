@@ -83,7 +83,7 @@ conan profile detect --force
 
 However, it is highly recommended to write a conan profile manually instead of depending on the detected one. In the profile, you can set information like the operating system, compiler or build configuration.
 
-For example, the following is my clang and gcc profile on MacOS m1:
+For example, the following is my clang and gcc profile on MacOS m1: (see more in [conan/profiles](conan/profiles))
 
 <details>
 <summary><code>_common</code> for common profile settings</summary>
