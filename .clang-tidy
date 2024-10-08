@@ -6,16 +6,14 @@ Checks: >
   -abseil*,
   -altera*,
   -boost-use-ranges,
-  -cert-dcl21-cpp,
   -fuchsia*,
-  -llvmlib*,
+  -google-readability-todo,
   -llvm-include-order,
   -llvm-qualified-auto,
-  -misc-include-cleaner,
-  -zircon*,
-  -google-readability-todo,
+  -llvmlib*,
   -readability-qualified-auto,
   -readability-static-accessed-through-instance,
+  -zircon*,
 CheckOptions:
   modernize-use-ranges.UseReversePip: true
   readability-identifier-length.IgnoredVariableNames: n|ch|_|id|to|t|u|i|j|k|op
