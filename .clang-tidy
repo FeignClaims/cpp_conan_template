@@ -23,6 +23,7 @@ CheckOptions:
   # readability-identifier-naming.AggressiveDependentMemberLookup: false
   # readability-identifier-naming.CheckAnonFieldInParent: true
   # readability-identifier-naming.ClassCase: Leading_upper_snake_case
+  # readability-identifier-naming.ClassIgnoredRegexp: "[a-z_]+_type|pointer|(const_)?reference|(const_)?iterator|iterator_(category|concept)"
   # readability-identifier-naming.ClassConstantCase: lower_case
   # readability-identifier-naming.ClassMemberCase: lower_case
   # readability-identifier-naming.ClassMethodCase: lower_case
@@ -67,6 +68,7 @@ CheckOptions:
   # readability-identifier-naming.StaticConstantCase: lower_case
   # readability-identifier-naming.StaticVariableCase: lower_case
   # readability-identifier-naming.StructCase: Leading_upper_snake_case
+  # readability-identifier-naming.StructIgnoredRegexp: "[a-z_]+_type|pointer|(const_)?reference|(const_)?iterator|iterator_(category|concept)"
   # readability-identifier-naming.TemplateParameterCase: Leading_upper_snake_case
   # readability-identifier-naming.TemplateTemplateParameterCase: Leading_upper_snake_case
   # readability-identifier-naming.TypeAliasCase: Leading_upper_snake_case
