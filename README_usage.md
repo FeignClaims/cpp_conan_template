@@ -35,7 +35,7 @@ python3 script/rename.py sample_lib <new_lib_name>
 
 :warning: For simplicity, the script has hardcoded to replace all files inside the parent directory of where the script located (`dirname(dirname(abspath(__file__))`). DON'T move the script to somewhere else.
 
-## Configure option 1: only use cmake
+## Configure option 1: only use cmake (recommended)
 
 Edit `CMakeLists.txt`, add a line `run_conan()` between `include(sample_project_fetch_project_options)` and `project(cpp_novice LANGUAGES CXX)`. That is:
 
