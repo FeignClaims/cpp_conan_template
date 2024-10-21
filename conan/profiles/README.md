@@ -21,21 +21,21 @@ Among all matched files, the file has the maximum number of equal sections shoul
 
 For example, with conan profiles:
 
-- `#-#-#-clang-#-#-#`;
-- `#-#-#-gcc-#-#-#`;
-- `#-#-#-msvc-#-#-#`;
-- `macos-#-#-gcc-13-#-#`;
-- `windows-#-#-clang-#-#-#`;
-- `windows-#-#-clang-#-Debug-#`.
-- `windows-#-#-clang-17-#-#`.
-- `windows-#-#-clang-17-Release-#`.
+- `#-#-#-clang-#-#`;
+- `#-#-#-gcc-#-#`;
+- `#-#-#-msvc-#-#`;
+- `macos-#-#-gcc-13-#`;
+- `windows-#-#-clang-#-#`;
+- `windows-#-#-clang-#-Debug`.
+- `windows-#-#-clang-17-#`.
+- `windows-#-#-clang-17-Release`.
 
 The jobs should match as the following:
 
-| job                                | matched conan profile            |
-| ---------------------------------- | -------------------------------- |
-| `macos-12-clang-latest-Debug-ON`   | `#-#-#-clang-#-#-#`              |
-| `macos-12-gcc-13-Debug-ON`         | `macos-#-#-gcc-#-#-#`            |
-| `windows-2022-clang-16-Debug-ON`   | `windows-#-#-clang-#-#-#`        |
-| `windows-2022-clang-17-Debug-ON`   | `windows-#-#-clang-#-Debug-#`    |
-| `windows-2022-clang-17-Release-ON` | `windows-#-#-clang-17-Release-#` |
+| job                                    | matched conan profile          |
+| -------------------------------------- | ------------------------------ |
+| `macos-12-armv8-clang-latest-Debug`    | `#-#-#-clang-#-#`              |
+| `macos-12-armv8-gcc-13-Debug`          | `macos-#-#-gcc-#-#`            |
+| `windows-2022-x86_64-clang-16-Debug`   | `windows-#-#-clang-#-#`        |
+| `windows-2022-x86_64-clang-17-Debug`   | `windows-#-#-clang-#-Debug`    |
+| `windows-2022-x86_64-clang-17-Release` | `windows-#-#-clang-17-Release` |

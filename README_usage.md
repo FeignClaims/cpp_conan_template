@@ -79,6 +79,15 @@ export CXX="clang++"
 conan profile detect --force
 ```
 
+In addition, in the `conan/profiles` folder, I've provided some generic profiles for you (and for [CI](.github/actions/setup_conan/action.yml)). You can use `script/match_conan_profile.py` to find the best matching generic profile based on your query:
+
+(See more details in [conan/profiles/README.md](conan/profiles/README.md).)
+
+```bash
+# "Usage: python3 script/match_conan_profile.py <conan_profile> (specified as <os>-<os_version>-<architecture>-<compiler>-<compiler_version>-<build_type>)"
+python3 script/match_conan_profile.py "macos-#-armv8-clang-#-Debug"  # `#` represents a wildcard character
+```
+
 #### Write your own profile
 
 However, it is highly recommended to write a conan profile manually instead of depending on the detected one. In the profile, you can set information like the operating system, compiler or build configuration.
