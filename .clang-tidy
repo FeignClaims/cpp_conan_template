@@ -11,6 +11,7 @@ Checks: >
   -llvm-include-order,
   -llvm-qualified-auto,
   -llvmlib*,
+  -misc-include-cleaner,  # Excluded since currently there's no way to tell clang-tidy to use <range/v3/all.hpp> instead of single headers
   -readability-qualified-auto,
   -readability-static-accessed-through-instance,
   -zircon*,
