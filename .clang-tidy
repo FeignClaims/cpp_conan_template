@@ -1,4 +1,6 @@
 ---
+# `misc-include-cleaner` is excluded since currently there's no way to tell clang-tidy to use <range/v3/all.hpp> instead
+#   of single headers
 Checks: >
   clang-diagnostic-*,
   clang-analyzer-*,
@@ -11,7 +13,7 @@ Checks: >
   -llvm-include-order,
   -llvm-qualified-auto,
   -llvmlib*,
-  -misc-include-cleaner,  # Excluded since currently there's no way to tell clang-tidy to use <range/v3/all.hpp> instead of single headers
+  -misc-include-cleaner,
   -readability-qualified-auto,
   -readability-static-accessed-through-instance,
   -zircon*,
