@@ -4,7 +4,7 @@
 
 The usage steps of this template can be divided into
 
-- Rename
+- [Rename](#rename)
 - Configure
   - [Option 1: only use cmake (the conan part is handled by cmake automatically)](#configure-option-1-only-use-cmake)
   - [Option 2: invoke conan, then cmake](#configure-option-2-invoke-conan-then-cmake)
@@ -12,10 +12,14 @@ The usage steps of this template can be divided into
 - [Build](#build)
 - [Test](#test)
 - [Install](#install)
+- [A note for multi-config generators and LSP based on `compile_commands.json`](#a-note-for-multi-config-generators-and-lsp-based-on-compile_commandsjson)
+- [Almost always use conan](#almost-always-use-conan)
 
 Note that vcpkg can also be handled like [configure option 1](#configure-option-1-only-use-cmake), see [aminya/cpp_vcpkg_project](https://github.com/aminya/cpp_vcpkg_project).
 
 In addition, the appendix gives a hint on [almost-always-use-conan style usage](#almost-always-use-conan).
+
+Of course, you can use release conan packages in your debug configuration, see [below](#configure-option-2-invoke-conan-then-cmake).
 
 ## Rename
 
@@ -183,6 +187,12 @@ You can specify more than one profiles, to merge the profile settings:
 conan install . -pr _common -pr gcc -b missing -s build_type=Release
 ```
 
+You can specify build_type for some specific packages:
+
+```bash
+conan install . -pr _common -pr gcc -b missing -s build_type=Debug -s "opencv/*:build_type=Release" -s "&:build_type=Release"
+```
+
 After this, conan will generate `CMakeUserPresets.json` for cmake.
 
 ### Configure cmake
@@ -301,6 +311,16 @@ Use `cmake --install` for help.
 ```bash
 cmake --install <build_dir> [<options>]
 ```
+
+## A note for multi-config generators and LSP based on `compile_commands.json`
+
+If you use CMake with multi-config generators (like `Ninja Multi-Config`, `XCode`, `Visual Studio`) and a LSP based on `compile_commands.json` (like clangd, Qt Creator, CLion), please make sure to define `CMAKE_CONFIGURATION_TYPES` yourself and install conan packages for all configuration types.
+
+For example, if you're setting `cmake <other args> "-DCMAKE_CONFIGURATION_TYPES=Release;Debug"`, you should install conan packages for both `Release` and `Debug` configuration types.
+
+Why? When using cmake with multi-config-generators, cmake merges compile flags in all configuration types into a single  `compile_commands.json` file, and this project template uses `Release;Debug;RelWithDebInfo;MinSizeRel` by default. If you only install conan packages for `Release` configuration, your LSP may be confused: while your `Release` configuration includes conan packages installed, your compile flags in `Debug`/`RelWithDebInfo`/`MinSizeRel` configurations includes nothing!
+
+Of course, you could use `Release` conan packages in `Debug`/`RelWithDebInfo`/`MinSizeRel` conan packages, or vice versa. See [here](#configure-option-2-invoke-conan-then-cmake).
 
 ## Almost always use conan
 
