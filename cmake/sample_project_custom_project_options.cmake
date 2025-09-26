@@ -59,6 +59,7 @@ dynamic_project_options(
   CLANG_WARNINGS
   -Wall
   -Wextra # reasonable and standard
+  -Warray-compare # warn about array comparison on versions older than C++20
   -Wcast-align # warn for potential performance problem casts
   -Wcast-function-type # warn about function typemismatches in casts
   -Wconversion # warn on type conversions that may lose data
@@ -88,6 +89,7 @@ dynamic_project_options(
   -Wunused # warn on anything being unused
   -Wno-gnu-line-marker # avoid the warn on gnu line marker when `--save-temps=obj` enabled
   -Wno-unused-command-line-argument # disable warn if command line argument unused
+  -Wnrvo # warn about missed NRVO opportunities
   -ftemplate-backtrace-limit=0
   -fconstexpr-backtrace-limit=0
 
