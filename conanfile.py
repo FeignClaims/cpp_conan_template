@@ -42,8 +42,8 @@ class sample_project_recipe(ConanFile):
         cmake_layout(self)
 
     def requirements(self):
-        self.requires("fmt/11.0.2")
-        self.requires("ms-gsl/4.0.0")
+        self.requires("fmt/12.1.0")
+        self.requires("ms-gsl/4.2.0")
         self.requires("range-v3/0.12.0")
 
     @property
@@ -92,8 +92,8 @@ class sample_project_recipe(ConanFile):
         self._validate_options_requirements()
 
     def build_requirements(self):
-        self.tool_requires("cmake/[>=3.25 <4.0.0]")
-        self.test_requires("catch2/3.6.0")
+        self.tool_requires("cmake/[>=4.0.0 <5.0.0]")
+        self.test_requires("catch2/3.14.0")
 
     def generate(self):
         CMakeDeps(self).generate()
