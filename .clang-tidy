@@ -1,9 +1,10 @@
 ---
 # `misc-include-cleaner` is excluded since currently there's no way to tell clang-tidy to use <range/v3/all.hpp> instead
 #   of single headers
+---
 Checks: >
-  clang-diagnostic-*,
   clang-analyzer-*,
+  clang-diagnostic-*,
   *,
   -abseil*,
   -altera*,
@@ -12,11 +13,13 @@ Checks: >
   -google-readability-todo,
   -llvm-include-order,
   -llvm-qualified-auto,
+  -llvm-use-ranges,
   -llvmlib*,
   -misc-include-cleaner,
   -readability-qualified-auto,
   -readability-static-accessed-through-instance,
   -zircon*,
+  -fuchsia*,
 CheckOptions:
   modernize-use-ranges.UseReversePip: true
   readability-identifier-length.IgnoredVariableNames: n|ch|_|id|to|t|u|i|j|k|op
