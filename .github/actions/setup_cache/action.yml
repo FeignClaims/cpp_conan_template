@@ -9,7 +9,7 @@ runs:
   using: "composite"
   steps:
     - name: Cache software caches
-      uses: actions/cache@v4.0.2
+      uses: actions/cache@v4
       with:
         path: |
           ~/.cache/pip
@@ -22,7 +22,7 @@ runs:
           ${{ inputs.key }}-${{ hashFiles('**/CMakeLists.txt') }}
 
     - name: Cache conan
-      uses: actions/cache@v4.0.2
+      uses: actions/cache@v4
       with:
         path: ~/.conan2/p
         key: ${{ inputs.key }}-${{ hashFiles('conanfile.py', 'conanfile.txt') }}-${{ github.run_id }}
